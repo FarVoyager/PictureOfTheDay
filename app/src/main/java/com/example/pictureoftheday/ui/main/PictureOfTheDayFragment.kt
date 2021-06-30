@@ -13,7 +13,6 @@ import coil.api.load
 import com.example.pictureoftheday.R
 import com.example.pictureoftheday.databinding.FragmentPictureOfTheDayBinding
 import com.example.pictureoftheday.ui.main.viewmodel.AppState
-import com.example.pictureoftheday.ui.main.viewmodel.MainViewModel
 import com.example.pictureoftheday.ui.main.viewmodel.PictureOfTheDayViewModel
 
 

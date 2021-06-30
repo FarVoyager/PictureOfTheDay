@@ -3,12 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.main.PictureOfTheDayFragment">
 
-    <ImageView
+    <com.example.pictureoftheday.ui.main.EquilateralImageView
         android:id="@+id/POD_image_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:scaleType="fitCenter"
+        android:contentDescription="@string/photo_of_the_day_stub"
+        app:srcCompat="@drawable/ic_launcher_background" />
 
     <include
         android:id="@+id/includedLoadingLayout"

@@ -1,4 +1,4 @@
-package com.example.pictureoftheday.ui.main
+package com.example.pictureoftheday.ui.main.viewmodel
 
 import androidx.lifecycle.ViewModel
 

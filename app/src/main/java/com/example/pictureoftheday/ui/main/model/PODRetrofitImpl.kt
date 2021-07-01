@@ -1,7 +1,7 @@
-package com.example.pictureoftheday.ui.main.repository
+package com.example.pictureoftheday.ui.main.model
 
+import com.example.pictureoftheday.ui.main.repository.PictureOfTheDayAPI
 import com.google.gson.GsonBuilder
-import com.google.gson.annotations.SerializedName
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response

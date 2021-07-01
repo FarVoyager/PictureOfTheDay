@@ -11,8 +11,6 @@ import com.google.android.material.navigation.NavigationView
 
 class BottomSheetDialogFragment : BottomSheetDialogFragment() {
 
-
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -31,7 +29,5 @@ class BottomSheetDialogFragment : BottomSheetDialogFragment() {
             }
             true
         }
-
     }
-
 }

@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.pictureoftheday.ui.main.model.PODServerResponseData
-import com.example.pictureoftheday.ui.main.repository.PODRetrofitImpl
+import com.example.pictureoftheday.ui.main.model.PODRetrofitImpl
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -42,11 +42,9 @@ class PictureOfTheDayViewModel(
                             }
                         }
                     }
-
                     override fun onFailure(call: Call<PODServerResponseData>, t: Throwable) {
                         liveDataForViewToObserve.value = AppState.Error(t)
                     }
-
                 })
         }
     }

@@ -22,23 +22,20 @@ import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
-
 class PictureOfTheDayFragment : Fragment() {
 
     private var _binding: FragmentPictureOfTheDayBinding? = null
     private val binding get() = _binding!!
-
-    private lateinit var bottomSheetBehavior : BottomSheetBehavior<ConstraintLayout>
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
 
     private val viewModel: PictureOfTheDayViewModel by lazy {
-        ViewModelProviders.of(this).get(PictureOfTheDayViewModel::class.java)
+        ViewModelProvider(this).get(PictureOfTheDayViewModel::class.java)
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout for this fragment
         _binding = FragmentPictureOfTheDayBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -46,16 +43,11 @@ class PictureOfTheDayFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.getData().observe(viewLifecycleOwner, { renderData(it) })
+
+        setWikiFieldIconClickAction()
         setBottomSheetBehavior(view.findViewById(R.id.bottom_sheet_container))
         setBottomAppBar(view)
 
-        binding.inputLayout.setEndIconOnClickListener {
-            val intent = Intent(Intent.ACTION_VIEW)
-            val wikiFieldText =
-                Uri.parse("https://ru.wikipedia.org/wiki/${binding.inputEditText.text.toString()}")
-            intent.data = wikiFieldText
-            startActivity(intent)
-        }
     }
 
     private fun renderData(data: AppState) {
@@ -63,25 +55,27 @@ class PictureOfTheDayFragment : Fragment() {
             is AppState.Success -> {
                 binding.includedLoadingLayout.loadingLayout.visibility = View.GONE
 
-                val serverResponseData = data.serverResponseData
+                val serverResponseData = data.serverResponseData //является ли это нарушением MWWM?
                 val url = serverResponseData.url
                 if (url.isNullOrEmpty()) {
                     Toast.makeText(requireContext(), "Ошибка: пустой URL", Toast.LENGTH_SHORT)
                         .show()
                 } else {
+                    //загрузка  картинки по url
                     binding.PODImageView.load(url) {
                         lifecycle(this@PictureOfTheDayFragment)
                         error(R.drawable.ic_load_error_vector)
                         placeholder(R.drawable.ic_no_photo_vector)
                     }
 
+                    //заполнение bottom sheet данными из API
                     val bottomSheetTitleTextView: TextView? =
-                    view?.findViewById(R.id.bottom_sheet_description_header)
+                        view?.findViewById(R.id.bottom_sheet_description_header)
                     bottomSheetTitleTextView?.text = serverResponseData.title
+
                     val bottomSheetDescriptionTextView: TextView? =
                         view?.findViewById(R.id.bottom_sheet_description)
                     bottomSheetDescriptionTextView?.text = serverResponseData.explanation
-
                 }
             }
             is AppState.Loading -> {
@@ -95,23 +89,26 @@ class PictureOfTheDayFragment : Fragment() {
         }
     }
 
+    //поведение bottom sheet
     private fun setBottomSheetBehavior(bottomSheetLayout: ConstraintLayout) {
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetLayout)
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
 
-        bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+        //действия при изм. состояния bottom sheet
+        bottomSheetBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 when (newState) {
-                    BottomSheetBehavior.STATE_DRAGGING -> Toast.makeText(requireContext(), "DRAGGING", Toast.LENGTH_SHORT).show()
-                    BottomSheetBehavior.STATE_COLLAPSED -> Toast.makeText(requireContext(), "COLLAPSED", Toast.LENGTH_SHORT).show()
-                    BottomSheetBehavior.STATE_EXPANDED -> Toast.makeText(requireContext(), "EXPANDED", Toast.LENGTH_SHORT).show()
-                    BottomSheetBehavior.STATE_HALF_EXPANDED -> Toast.makeText(requireContext(), "HALF_EXPANDED", Toast.LENGTH_SHORT).show()
-                    BottomSheetBehavior.STATE_HIDDEN -> Toast.makeText(requireContext(), "HIDDEN", Toast.LENGTH_SHORT).show()
-                    BottomSheetBehavior.STATE_SETTLING -> Toast.makeText(requireContext(), "SETTLING", Toast.LENGTH_SHORT).show()
+                    BottomSheetBehavior.STATE_DRAGGING -> makeToast("DRAGGING")
+                    BottomSheetBehavior.STATE_COLLAPSED -> makeToast("COLLAPSED")
+                    BottomSheetBehavior.STATE_EXPANDED -> makeToast("EXPANDED")
+                    BottomSheetBehavior.STATE_HALF_EXPANDED -> makeToast("HALF_EXPANDED")
+                    BottomSheetBehavior.STATE_HIDDEN -> makeToast("HIDDEN")
+                    BottomSheetBehavior.STATE_SETTLING -> makeToast("SETTLING")
                 }
             }
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                Toast.makeText(requireContext(), "SLIDE!", Toast.LENGTH_SHORT).show()
+                makeToast("SLIDE!")
             }
         })
     }
@@ -122,30 +119,7 @@ class PictureOfTheDayFragment : Fragment() {
         private var isMain = true
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.bottom_menu, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.app_bar_fav -> Toast.makeText(requireContext(), "Favorite", Toast.LENGTH_SHORT).show()
-            R.id.app_bar_settings -> {
-                requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.container, ChipsFragment())
-                    .addToBackStack(null)
-                    .commit()
-            }
-
-            android.R.id.home -> {
-                activity?.let {
-                    BottomSheetDialogFragment().show(it.supportFragmentManager, "tag")
-                }
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
+    //установка bottom app bar
     private fun setBottomAppBar(view: View) {
         val context = activity as MainActivity
         context.setSupportActionBar(view.findViewById(R.id.bottom_app_bar))
@@ -163,11 +137,52 @@ class PictureOfTheDayFragment : Fragment() {
                 bottomAppBar.replaceMenu(R.menu.menu_search)
             } else {
                 isMain = true
-                bottomAppBar.navigationIcon = ContextCompat.getDrawable(context, R.drawable.ic_hamburger_menu_bottom_bar)
+                bottomAppBar.navigationIcon =
+                    ContextCompat.getDrawable(context, R.drawable.ic_hamburger_menu_bottom_bar)
                 bottomAppBar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_CENTER
                 fab.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_plus_fab))
                 bottomAppBar.replaceMenu(R.menu.bottom_menu)
             }
         }
     }
+
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.bottom_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.app_bar_fav -> Toast.makeText(requireContext(), "Favorite", Toast.LENGTH_SHORT)
+                .show()
+            R.id.app_bar_settings -> {
+                requireActivity().supportFragmentManager.beginTransaction()
+                    .replace(R.id.container, ChipsFragment())
+                    .addToBackStack(null)
+                    .commit()
+            }
+            android.R.id.home -> {
+                activity?.let {
+                    BottomSheetDialogFragment().show(it.supportFragmentManager, "tag")
+                }
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun makeToast(text: String) {
+        Toast.makeText(requireContext(), text, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun setWikiFieldIconClickAction() {
+        binding.inputLayout.setEndIconOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW)
+            val wikiFieldText =
+                Uri.parse("https://ru.wikipedia.org/wiki/${binding.inputEditText.text.toString()}")
+            intent.data = wikiFieldText
+            startActivity(intent)
+        }
+    }
+
 }

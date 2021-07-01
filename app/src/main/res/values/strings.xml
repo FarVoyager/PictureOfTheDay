@@ -3,4 +3,11 @@
     <string name="photo_of_the_day_stub">Photo of The day stub</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="search_wiki">Искать</string>
+    <string name="wiki_helper_text">Ищите на Вики</string>
+    <string name="favourite">Favourite</string>
+    <string name="settings">Settings</string>
+    <string name="toScreen_2">На экран 2</string>
+    <string name="toScreen_1">На экран 1</string>
+    <string name="search">search</string>
 </resources>

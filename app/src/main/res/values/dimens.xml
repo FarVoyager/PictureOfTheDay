@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="wiki_box_corner_value">20dp</dimen>
+    <dimen name="nav_drawer_margin_main">8dp</dimen>
+</resources>

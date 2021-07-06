@@ -7,7 +7,6 @@ import com.example.pictureoftheday.R
 var isLightTheme = true //для изменения темы
 
 class MainActivity : AppCompatActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme()
         super.onCreate(savedInstanceState)

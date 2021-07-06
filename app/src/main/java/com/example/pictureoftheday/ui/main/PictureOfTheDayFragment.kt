@@ -154,8 +154,11 @@ class PictureOfTheDayFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.app_bar_fav -> Toast.makeText(requireContext(), "Favorite", Toast.LENGTH_SHORT)
-                .show()
+            R.id.app_bar_fav ->
+                requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.container, StylesFragment())
+                .addToBackStack(null)
+                .commit()
             R.id.app_bar_settings -> {
                 requireActivity().supportFragmentManager.beginTransaction()
                     .replace(R.id.container, ChipsFragment())

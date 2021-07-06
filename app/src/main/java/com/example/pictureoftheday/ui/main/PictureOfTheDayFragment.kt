@@ -94,23 +94,6 @@ class PictureOfTheDayFragment : Fragment() {
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetLayout)
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
 
-        //действия при изм. состояния bottom sheet
-        bottomSheetBehavior.addBottomSheetCallback(object :
-            BottomSheetBehavior.BottomSheetCallback() {
-            override fun onStateChanged(bottomSheet: View, newState: Int) {
-                when (newState) {
-                    BottomSheetBehavior.STATE_DRAGGING -> makeToast("DRAGGING")
-                    BottomSheetBehavior.STATE_COLLAPSED -> makeToast("COLLAPSED")
-                    BottomSheetBehavior.STATE_EXPANDED -> makeToast("EXPANDED")
-                    BottomSheetBehavior.STATE_HALF_EXPANDED -> makeToast("HALF_EXPANDED")
-                    BottomSheetBehavior.STATE_HIDDEN -> makeToast("HIDDEN")
-                    BottomSheetBehavior.STATE_SETTLING -> makeToast("SETTLING")
-                }
-            }
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                makeToast("SLIDE!")
-            }
-        })
     }
 
     companion object {

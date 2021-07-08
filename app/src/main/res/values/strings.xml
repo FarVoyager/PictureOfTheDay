@@ -10,4 +10,5 @@
     <string name="toScreen_2">Тёмная тема</string>
     <string name="toScreen_1">Светлая тема</string>
     <string name="search">search</string>
+    <string name="view_pager">ViewPager</string>
 </resources>

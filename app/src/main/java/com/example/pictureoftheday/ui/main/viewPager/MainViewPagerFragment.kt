@@ -1,0 +1,31 @@
+package com.example.pictureoftheday.ui.main.viewPager
+
+import android.os.Bundle
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import com.example.pictureoftheday.databinding.FragmentMainViewPagerBinding
+import me.relex.circleindicator.CircleIndicator
+
+class MainViewPagerFragment : Fragment() {
+
+    private var _binding: FragmentMainViewPagerBinding? = null
+    private val binding get() = _binding!!
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentMainViewPagerBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.viewPager.adapter = ViewPagerAdapter(childFragmentManager)
+        val indicator: CircleIndicator = binding.indicator
+        indicator.setViewPager(binding.viewPager)
+    }
+}

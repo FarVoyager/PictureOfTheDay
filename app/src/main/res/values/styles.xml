@@ -5,6 +5,7 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary </item> <!-- цвет button, выбранных элементов -->
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="android:textColorPrimary">@color/primaryTextColor</item>
         <item name="colorPrimaryVariant">@color/colorPrimaryDark</item> <!-- ??? -->
         <item name="colorOnPrimary">#FFFFFF</item> <!-- ??? -->
         <item name="colorSecondary">@color/colorAccent </item> <!--цвет fab, progressBar, выбранных checkBox, Switch и radioButton-->
@@ -14,9 +15,15 @@
         <item name="colorOnError">#FFFFFF</item>
         <item name="colorSurface">@color/colorPrimary </item>  <!--цвет фонов switch, chip, tab, bottomSheet-->
         <item name="colorOnSurface">#212121 </item> <!--цвет рамок textInputLayout, невыбранных элементов-->
-        <item name="android:colorBackground">@color/white</item> <!--цвет заднего фона-->
+        <item name="android:colorBackground">@color/colorBackground</item> <!--цвет заднего фона-->
         <item name="colorOnBackground">#212121</item> <!-- ??? -->
         <item name="materialButtonStyle">@style/raisedButtonStyle</item>
+        <item name="tabSelectedTextColor">@color/white</item> <!-- ??? -->
+        <item name="tabIndicatorColor">@color/white</item> <!-- ??? -->
+        <item name="tabRippleColor">@color/white</item> <!-- ??? -->
+        <item name="bottomSheetBackground">@color/bottomSheetBackground</item> <!-- ??? -->
+        <item name="textColorThemed">@color/textColor</item> <!-- ??? -->
+
     </style>
 
     <style name="raisedButtonStyle" parent="Widget.MaterialComponents.Button">
@@ -30,10 +37,14 @@
         <item name="colorOnPrimary">@color/white</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/white</item>
-        <item name="android:colorBackground">#222222</item>
+        <item name="android:colorBackground">@color/colorBackgroundDark</item>
         <item name="colorSurface">#353535</item>
         <item name="colorOnSurface">#E1E1E1</item>
         <item name="boxStrokeWidth">1dp</item>
+        <item name="bottomSheetBackground">@color/bottomSheetBackgroundDark</item> <!-- ??? -->
+        <item name="textColorThemed">@color/textColorDark</item> <!-- ??? -->
+
+
     </style>
 
     <style name="Xeno.Button" parent="TextAppearance.MaterialComponents.Button">

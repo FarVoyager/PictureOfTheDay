@@ -3,27 +3,30 @@ package com.example.pictureoftheday.ui.main.viewPager
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
-import androidx.lifecycle.Lifecycle
-import androidx.viewpager2.adapter.FragmentStateAdapter
 
-private const val EARTH_FRAGMENT = 0
-private const val MARS_FRAGMENT = 1
-private const val WEATHER_FRAGMENT = 2
+private const val FRAGMENT_COUNT = 3
 
-class ViewPagerAdapter(private val fragmentManager: FragmentManager) : FragmentStatePagerAdapter(fragmentManager) {
-
-    private val fragments = arrayOf(EarthFragment(), MarsFragment(), WeatherFragment())
+class ViewPagerAdapter(fragmentManager: FragmentManager) : FragmentStatePagerAdapter(fragmentManager) {
 
     override fun getCount(): Int {
-        return fragments.size
+        return FRAGMENT_COUNT
     }
 
     override fun getItem(position: Int): Fragment {
         return when (position) {
-            0 -> fragments[EARTH_FRAGMENT]
-            1 -> fragments[MARS_FRAGMENT]
-            2 -> fragments[WEATHER_FRAGMENT]
-            else -> fragments[EARTH_FRAGMENT]
+            0 -> EarthFragment()
+            1 -> MarsFragment()
+            2 -> SystemFragment()
+            else -> EarthFragment()
+        }
+    }
+
+    override fun getPageTitle(position: Int): CharSequence {
+        return when (position) {
+            0 -> "Earth"
+            1 -> "Mars"
+            2 -> "System"
+            else -> "Error"
         }
     }
 }

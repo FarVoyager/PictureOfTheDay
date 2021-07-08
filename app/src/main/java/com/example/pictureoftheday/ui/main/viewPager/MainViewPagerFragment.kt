@@ -5,8 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.pictureoftheday.R
 import com.example.pictureoftheday.databinding.FragmentMainViewPagerBinding
-import me.relex.circleindicator.CircleIndicator
 
 class MainViewPagerFragment : Fragment() {
 
@@ -25,7 +25,15 @@ class MainViewPagerFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.viewPager.adapter = ViewPagerAdapter(childFragmentManager)
-        val indicator: CircleIndicator = binding.indicator
-        indicator.setViewPager(binding.viewPager)
+        binding.indicator.setViewPager(binding.viewPager)
+
+        binding.tabLayout.apply {
+            setupWithViewPager(binding.viewPager)
+            getTabAt(0)?.setIcon(R.drawable.ic_earth)
+            getTabAt(1)?.setIcon(R.drawable.ic_mars)
+            getTabAt(2)?.setIcon(R.drawable.ic_system)
+
+        }
+
     }
 }

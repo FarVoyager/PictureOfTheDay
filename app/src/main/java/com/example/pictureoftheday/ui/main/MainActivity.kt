@@ -2,6 +2,7 @@ package com.example.pictureoftheday.ui.main
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import com.example.pictureoftheday.R
 
 var isLightTheme = true //для изменения темы
@@ -28,4 +29,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+
 }

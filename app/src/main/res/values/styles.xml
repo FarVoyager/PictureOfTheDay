@@ -23,6 +23,8 @@
         <item name="tabRippleColor">@color/white</item> <!-- ??? -->
         <item name="bottomSheetBackground">@color/bottomSheetBackground</item> <!-- ??? -->
         <item name="textColorThemed">@color/textColor</item> <!-- ??? -->
+        <item name="menuItemColorThemed">@color/white</item> <!-- ??? -->
+
 
     </style>
 
@@ -43,6 +45,7 @@
         <item name="boxStrokeWidth">1dp</item>
         <item name="bottomSheetBackground">@color/bottomSheetBackgroundDark</item> <!-- ??? -->
         <item name="textColorThemed">@color/textColorDark</item> <!-- ??? -->
+        <item name="menuItemColorThemed">@color/white</item> <!-- ??? -->
 
 
     </style>

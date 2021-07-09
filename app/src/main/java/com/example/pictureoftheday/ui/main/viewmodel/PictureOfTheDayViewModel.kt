@@ -8,24 +8,26 @@ import com.example.pictureoftheday.ui.main.model.PODRetrofitImpl
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.text.SimpleDateFormat
+import java.util.*
 
 class PictureOfTheDayViewModel(
     private val liveDataForViewToObserve: MutableLiveData<AppState> = MutableLiveData(),
     private val retrofitImpl: PODRetrofitImpl = PODRetrofitImpl()
 ) : ViewModel() {
 
-    fun getData(): LiveData<AppState> {
-        sendServerRequest()
+    fun getData(minusDays: Int): LiveData<AppState> {
+        sendServerRequest(minusDays)
         return liveDataForViewToObserve
     }
 
-    private fun sendServerRequest() {
+    private fun sendServerRequest(minusDays: Int) {
         liveDataForViewToObserve.value = AppState.Loading(null)
         val apiKey: String = com.example.pictureoftheday.BuildConfig.NASA_API_KEY
         if (apiKey.isBlank()) {
             AppState.Error(Throwable("You need API key"))
         } else {
-            retrofitImpl.getRetrofitQuery().getPictureOfTheDay(apiKey)
+            retrofitImpl.getRetrofitPODQuery().getPictureOfTheDay(apiKey, getPreviousDateForRequest(minusDays))
                 .enqueue(object : Callback<PODServerResponseData> {
                     override fun onResponse(
                         call: Call<PODServerResponseData>,
@@ -48,4 +50,16 @@ class PictureOfTheDayViewModel(
                 })
         }
     }
+
+
+
+    fun getPreviousDateForRequest(minusDays: Int): String {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+        val calendar = Calendar.getInstance()
+        calendar.add(Calendar.DATE, -minusDays)
+        dateFormat.format(calendar.time)
+        return dateFormat.format(calendar.time).toString()
+    }
+
+
 }

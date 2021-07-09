@@ -22,6 +22,8 @@ import com.example.pictureoftheday.ui.main.viewmodel.PictureOfTheDayViewModel
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import java.text.SimpleDateFormat
+import java.util.*
 
 class PictureOfTheDayFragment : Fragment() {
 
@@ -43,7 +45,7 @@ class PictureOfTheDayFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.getData().observe(viewLifecycleOwner, { renderData(it) })
+        viewModel.getData(0).observe(viewLifecycleOwner, { renderData(it) })
 
         setWikiFieldIconClickAction()
         setBottomSheetBehavior(view.findViewById(R.id.bottom_sheet_container))
@@ -62,6 +64,7 @@ class PictureOfTheDayFragment : Fragment() {
                     Toast.makeText(requireContext(), "Ошибка: пустой URL", Toast.LENGTH_SHORT)
                         .show()
                 } else {
+
                     //загрузка  картинки по url
                     binding.PODImageView.load(url) {
                         lifecycle(this@PictureOfTheDayFragment)

@@ -14,10 +14,11 @@ class ViewPagerAdapter(fragmentManager: FragmentManager) : FragmentStatePagerAda
 
     override fun getItem(position: Int): Fragment {
         return when (position) {
-            0 -> EarthFragment()
-            1 -> MarsFragment()
-            2 -> SystemFragment()
-            else -> EarthFragment()
+            0 -> PreviousDayFragmentThree()
+            1 -> PreviousDayFragmentTwo()
+            2 -> PreviousDayFragmentOne()
+
+            else -> PreviousDayFragmentOne()
         }
     }
 

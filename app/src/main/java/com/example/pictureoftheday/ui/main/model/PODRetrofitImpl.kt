@@ -14,7 +14,7 @@ import kotlin.jvm.Throws
 class PODRetrofitImpl {
     private val baseUrl = "https://api.nasa.gov/"
 
-    fun getRetrofitQuery() : PictureOfTheDayAPI {
+    fun getRetrofitPODQuery() : PictureOfTheDayAPI {
         val podRetrofit = Retrofit.Builder()
             .baseUrl(baseUrl)
             .addConverterFactory(GsonConverterFactory.create(GsonBuilder().setLenient().create()))

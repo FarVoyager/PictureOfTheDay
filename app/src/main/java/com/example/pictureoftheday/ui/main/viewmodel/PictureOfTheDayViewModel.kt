@@ -51,8 +51,6 @@ class PictureOfTheDayViewModel(
         }
     }
 
-
-
     fun getPreviousDateForRequest(minusDays: Int): String {
         val dateFormat = SimpleDateFormat("yyyy-MM-dd")
         val calendar = Calendar.getInstance()
@@ -60,6 +58,4 @@ class PictureOfTheDayViewModel(
         dateFormat.format(calendar.time)
         return dateFormat.format(calendar.time).toString()
     }
-
-
 }

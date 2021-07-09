@@ -11,6 +11,8 @@ import com.example.pictureoftheday.databinding.FragmentMainViewPagerBinding
 import com.google.android.material.badge.BadgeDrawable.TOP_START
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.tabs.TabLayout
+import java.text.SimpleDateFormat
+import java.util.*
 
 class MainViewPagerFragment : Fragment() {
 
@@ -33,24 +35,30 @@ class MainViewPagerFragment : Fragment() {
 
         binding.tabLayout.apply {
             setupWithViewPager(binding.viewPager)
-            getTabAt(0)?.setIcon(R.drawable.ic_earth)
-            getTabAt(1)?.setIcon(R.drawable.ic_mars)
-            getTabAt(2)?.setIcon(R.drawable.ic_system)
+            getTabAt(0)?.text = getCurrentStringDate(3)
+            getTabAt(1)?.text = getCurrentStringDate(2)
+            getTabAt(2)?.text = getCurrentStringDate(1)
             getTabAt(2)?.orCreateBadge?.number = 3
 
             addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
                 override fun onTabSelected(tab: TabLayout.Tab?) {
                     tab?.removeBadge()
                 }
-
                 override fun onTabUnselected(tab: TabLayout.Tab?) {
                     //
                 }
-
                 override fun onTabReselected(tab: TabLayout.Tab?) {
                     //
                 }
             })
         }
+    }
+
+    fun getCurrentStringDate(minusDays: Int): String {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+        val calendar = Calendar.getInstance()
+        calendar.add(Calendar.DATE, -minusDays)
+        dateFormat.format(calendar.time)
+        return dateFormat.format(calendar.time).toString()
     }
 }

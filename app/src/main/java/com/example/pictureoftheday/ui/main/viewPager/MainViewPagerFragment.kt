@@ -54,7 +54,7 @@ class MainViewPagerFragment : Fragment() {
         }
     }
 
-    fun getCurrentStringDate(minusDays: Int): String {
+    private fun getCurrentStringDate(minusDays: Int): String {
         val dateFormat = SimpleDateFormat("yyyy-MM-dd")
         val calendar = Calendar.getInstance()
         calendar.add(Calendar.DATE, -minusDays)

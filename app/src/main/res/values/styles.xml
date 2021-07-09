@@ -35,7 +35,7 @@
     <style name="AppThemeDark" parent="AppTheme">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="android:textColorPrimary">@color/white</item>
-        <item name="android:textColor">#616161</item>
+        <item name="android:textColor">#ACACAC</item>
         <item name="colorOnPrimary">@color/white</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/white</item>

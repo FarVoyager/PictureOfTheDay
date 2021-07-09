@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/app_bar_view_pager"
-        android:icon="@android:drawable/ic_menu_compass"
+        android:icon="@android:drawable/ic_menu_recent_history"
         android:title="@string/view_pager"
         app:showAsAction="ifRoom" />
 

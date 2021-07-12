@@ -16,6 +16,7 @@ import coil.api.load
 import com.example.pictureoftheday.R
 import com.example.pictureoftheday.databinding.BottomSheetBinding
 import com.example.pictureoftheday.databinding.FragmentPictureOfTheDayBinding
+import com.example.pictureoftheday.ui.main.utils.LayoutsFragment
 import com.example.pictureoftheday.ui.main.viewPager.MainViewPagerFragment
 import com.example.pictureoftheday.ui.main.viewmodel.AppState
 import com.example.pictureoftheday.ui.main.viewmodel.PictureOfTheDayViewModel
@@ -148,7 +149,7 @@ class PictureOfTheDayFragment : Fragment() {
                 .commit()
             R.id.app_bar_settings -> {
                 requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.container, ChipsFragment())
+                    .replace(R.id.container, LayoutsFragment())
                     .addToBackStack(null)
                     .commit()
             }

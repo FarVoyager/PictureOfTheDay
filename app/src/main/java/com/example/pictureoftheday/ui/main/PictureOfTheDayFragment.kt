@@ -51,7 +51,6 @@ class PictureOfTheDayFragment : Fragment() {
         setWikiFieldIconClickAction()
         setBottomSheetBehavior(view.findViewById(R.id.bottom_sheet_container))
         setBottomAppBar(view)
-
     }
 
     private fun renderData(data: AppState) {

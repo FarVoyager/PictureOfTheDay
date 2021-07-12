@@ -2,10 +2,9 @@
 <MotionScene xmlns:motion="http://schemas.android.com/apk/res-auto">
 
     <Transition
-        motion:constraintSetEnd="@layout/fragment_main_start"
+        motion:constraintSetEnd="@layout/wiki_animation_end_layout"
         motion:constraintSetStart="@layout/fragment_picture_of_the_day"
         motion:duration="1000">
-
         <OnClick motion:targetId="@id/wiki_button" />
     </Transition>
 </MotionScene>

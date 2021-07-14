@@ -8,22 +8,18 @@ import androidx.fragment.app.Fragment
 import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import coil.api.load
 import com.example.pictureoftheday.R
-import com.example.pictureoftheday.databinding.BottomSheetBinding
 import com.example.pictureoftheday.databinding.FragmentPictureOfTheDayBinding
+import com.example.pictureoftheday.ui.main.animations.AnimationsFragment
+import com.example.pictureoftheday.ui.main.animations.ExplodeFragment
 import com.example.pictureoftheday.ui.main.utils.LayoutsFragment
 import com.example.pictureoftheday.ui.main.viewPager.MainViewPagerFragment
 import com.example.pictureoftheday.ui.main.viewmodel.AppState
 import com.example.pictureoftheday.ui.main.viewmodel.PictureOfTheDayViewModel
-import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import java.text.SimpleDateFormat
 import java.util.*
 
 class PictureOfTheDayFragment : Fragment() {
@@ -103,7 +99,6 @@ class PictureOfTheDayFragment : Fragment() {
     companion object {
         @JvmStatic
         fun newInstance() = PictureOfTheDayFragment()
-        private var isMain = true
     }
 
     //установка bottom app bar
@@ -113,23 +108,11 @@ class PictureOfTheDayFragment : Fragment() {
         setHasOptionsMenu(true)
 
         val fab = view.findViewById<FloatingActionButton>(R.id.fab)
-        val bottomAppBar = view.findViewById<BottomAppBar>(R.id.bottom_app_bar)
-
         fab.setOnClickListener {
-            if (isMain) {
-                isMain = false
-                bottomAppBar.navigationIcon = null
-                bottomAppBar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_END
-                fab.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_back_fab))
-                bottomAppBar.replaceMenu(R.menu.menu_search)
-            } else {
-                isMain = true
-                bottomAppBar.navigationIcon =
-                    ContextCompat.getDrawable(context, R.drawable.ic_hamburger_menu_bottom_bar)
-                bottomAppBar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_CENTER
-                fab.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_plus_fab))
-                bottomAppBar.replaceMenu(R.menu.bottom_menu)
-            }
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.container, AnimationsFragment())
+                .addToBackStack(null)
+                .commit()
         }
     }
 

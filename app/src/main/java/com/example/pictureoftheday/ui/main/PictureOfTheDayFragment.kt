@@ -56,7 +56,7 @@ class PictureOfTheDayFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel.getData(0).observe(viewLifecycleOwner, { renderData(it) })
 
-        binding.inputLayout.alpha = 0f
+        binding.inputLayout.alpha = 0f //для анимации
 
         setWikiFieldIconClickAction()
         setBottomSheetBehavior(view.findViewById(R.id.bottom_sheet_container))
@@ -68,7 +68,6 @@ class PictureOfTheDayFragment : Fragment() {
         when (data) {
             is AppState.Success -> {
                 binding.includedLoadingLayout.loadingLayout.visibility = View.GONE
-
                 val serverResponseData = data.serverResponseData //является ли это нарушением MWWM?
                 val url = serverResponseData.url
                 if (url.isNullOrEmpty()) {
@@ -76,26 +75,10 @@ class PictureOfTheDayFragment : Fragment() {
                         .show()
                 } else {
                     if (serverResponseData.mediaType == "video") {
-                        val webView = binding.yesterdayWebView
-                        webView.layoutParams = binding.PODImageView.layoutParams
-                        webView.visibility = View.VISIBLE
-                        binding.PODImageView.visibility = View.GONE
-                        webView.webViewClient = WebViewClient()
-                        webView.settings.javaScriptEnabled = true
-                        webView.settings.javaScriptCanOpenWindowsAutomatically = true
-                        webView.settings.mediaPlaybackRequiresUserGesture = false
-                        webView.webChromeClient = WebChromeClient();
-                        webView.loadUrl(url)
+                        showVideoContent(url)
                     } else {
-                        //загрузка  картинки по url
-                        binding.PODImageView.visibility = View.VISIBLE
-                        binding.PODImageView.load(url) {
-                            lifecycle(this@PictureOfTheDayFragment)
-                            error(R.drawable.ic_load_error_vector)
-                            placeholder(R.drawable.ic_no_photo_vector)
-                        }
+                        showPhotoContent(url)
                     }
-
 
                     //заполнение bottom sheet данными из API
                     val bottomSheetTitleTextView: TextView? =
@@ -116,6 +99,29 @@ class PictureOfTheDayFragment : Fragment() {
                 data.error.printStackTrace()
             }
         }
+    }
+
+    private fun showPhotoContent(url: String) {
+        binding.PODImageView.visibility = View.VISIBLE
+        binding.PODImageView.load(url) {
+            lifecycle(this@PictureOfTheDayFragment)
+            error(R.drawable.ic_load_error_vector)
+            placeholder(R.drawable.ic_no_photo_vector)
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+    private fun showVideoContent(url: String) {
+        val webView = binding.yesterdayWebView
+        webView.layoutParams = binding.PODImageView.layoutParams
+        webView.visibility = View.VISIBLE
+        binding.PODImageView.visibility = View.GONE
+        webView.webViewClient = WebViewClient()
+        webView.settings.javaScriptEnabled = true
+        webView.settings.javaScriptCanOpenWindowsAutomatically = true
+        webView.settings.mediaPlaybackRequiresUserGesture = false
+        webView.webChromeClient = WebChromeClient()
+        webView.loadUrl(url)
     }
 
     //поведение bottom sheet
@@ -191,10 +197,6 @@ class PictureOfTheDayFragment : Fragment() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun makeToast(text: String) {
-        Toast.makeText(requireContext(), text, Toast.LENGTH_SHORT).show()
-    }
-
     private fun setWikiFieldIconClickAction() {
         binding.wikiButton.setOnClickListener {
 
@@ -208,8 +210,7 @@ class PictureOfTheDayFragment : Fragment() {
                 ObjectAnimator.ofFloat(binding.inputLayout, "translationX", -1050f).start()
                 ObjectAnimator.ofFloat(binding.wikiButton, "elevation", 10f).start()
                 binding.inputLayout.animate()
-                    .alpha(1f)
-                    .setDuration(400)
+                    .alpha(1f).duration = 400
                 isWikiExpanded = !isWikiExpanded
             }
 

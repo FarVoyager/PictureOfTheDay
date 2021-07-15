@@ -67,6 +67,7 @@ class PreviousDayFragmentOne : Fragment() {
                         webView.loadUrl(url)
                     } else {
                         //загрузка  картинки по url
+                        binding.yesterdayImageView.visibility = View.VISIBLE
                         binding.yesterdayImageView.load(url) {
                             lifecycle(this@PreviousDayFragmentOne)
                             error(R.drawable.ic_load_error_vector)

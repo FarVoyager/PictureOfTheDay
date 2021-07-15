@@ -2,12 +2,16 @@ package com.example.pictureoftheday.ui.main
 
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.view.*
+import android.webkit.WebChromeClient
 import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.fragment.app.Fragment
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.ViewModelProvider
 import coil.api.load
@@ -42,6 +46,7 @@ class PictureOfTheDayFragment : Fragment() {
         return binding.root
     }
 
+    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.getData(0).observe(viewLifecycleOwner, { renderData(it) })
@@ -51,6 +56,7 @@ class PictureOfTheDayFragment : Fragment() {
         setBottomAppBar(view)
     }
 
+    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     private fun renderData(data: AppState) {
         when (data) {
             is AppState.Success -> {
@@ -63,18 +69,25 @@ class PictureOfTheDayFragment : Fragment() {
                         .show()
                 } else {
                     if (serverResponseData.mediaType == "video") {
-                        val webView = WebView(requireContext())
+                        val webView = binding.yesterdayWebView
                         webView.layoutParams = binding.PODImageView.layoutParams
+                        webView.visibility = View.VISIBLE
+                        binding.PODImageView.visibility = View.GONE
+                        webView.webViewClient = WebViewClient()
+                        webView.settings.javaScriptEnabled = true
+                        webView.settings.javaScriptCanOpenWindowsAutomatically = true
+                        webView.settings.mediaPlaybackRequiresUserGesture = false
+                        webView.webChromeClient = WebChromeClient();
                         webView.loadUrl(url)
                     } else {
                         //загрузка  картинки по url
+                        binding.PODImageView.visibility = View.VISIBLE
                         binding.PODImageView.load(url) {
                             lifecycle(this@PictureOfTheDayFragment)
                             error(R.drawable.ic_load_error_vector)
                             placeholder(R.drawable.ic_no_photo_vector)
                         }
                     }
-
 
 
                     //заполнение bottom sheet данными из API
@@ -135,9 +148,9 @@ class PictureOfTheDayFragment : Fragment() {
         when (item.itemId) {
             R.id.app_bar_fav ->
                 requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.container, StylesFragment())
-                .addToBackStack(null)
-                .commit()
+                    .replace(R.id.container, StylesFragment())
+                    .addToBackStack(null)
+                    .commit()
             R.id.app_bar_settings -> {
                 requireActivity().supportFragmentManager.beginTransaction()
                     .replace(R.id.container, LayoutsFragment())

@@ -1,5 +1,8 @@
 package com.example.pictureoftheday.ui.main.animations
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.ObjectAnimator
 import android.graphics.Rect
 import android.os.Build
 import android.os.Bundle
@@ -9,24 +12,20 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.FrameLayout
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.RecyclerView
 
 import com.example.pictureoftheday.R
-import com.example.pictureoftheday.databinding.FragmentAnimationsBinding
-import com.example.pictureoftheday.databinding.FragmentAnimationsEnlargeBinding
-import com.example.pictureoftheday.databinding.FragmentAnimationsPathTransitionsBinding
-import com.example.pictureoftheday.databinding.FragmentAnimationsShuffleBinding
+import com.example.pictureoftheday.databinding.*
 import java.util.ArrayList
 
 class AnimationsFragment : Fragment() {
 
-    private var _binding: FragmentAnimationsShuffleBinding? = null
+    private var isExpanded = false
+
+    private var _binding: FragmentAnimationsFabBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -34,35 +33,113 @@ class AnimationsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        _binding = FragmentAnimationsShuffleBinding.inflate(inflater, container, false)
+        _binding = FragmentAnimationsFabBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setFab()
+    }
 
-        val titles: MutableList<String> = ArrayList()
-        for (i in 0..4) {
-            titles.add(String.format("Item %d", i + 1))
-        }
-        createViews(binding.transitionsContainer, titles)
-        binding.button.setOnClickListener {
-            TransitionManager.beginDelayedTransition(binding.transitionsContainer, ChangeBounds())
-            titles.shuffle()
-            createViews(binding.transitionsContainer, titles)
+    private fun setFab() {
+        setInitialState()
+        binding.fab.setOnClickListener {
+            if (isExpanded) {
+                collapseFab()
+            } else {
+                expandFab()
+            }
         }
     }
 
-    private fun createViews(layout: ViewGroup, titles: List<String>) {
-        layout.removeAllViews()
-        for (title in titles) {
-            val newButton = Button(requireContext())
-            newButton.text = title
-            newButton.gravity = Gravity.CENTER_HORIZONTAL
-            ViewCompat.setTransitionName(newButton, title)
-            layout.addView(newButton)
+    private fun setInitialState() {
+        binding.transparentBackground.alpha = 0f
+        binding.optionOneContainer.apply {
+            alpha = 0f
+            isClickable = false
         }
+        binding.optionTwoContainer.apply {
+            alpha = 0f
+            isClickable = false
+        }
+    }
+
+    private fun expandFab() {
+        isExpanded = !isExpanded
+        ObjectAnimator.ofFloat(binding.plusImageview, "rotation", 0f, 135f).start()
+        ObjectAnimator.ofFloat(binding.optionOneContainer, "translationY", -250f).start()
+        ObjectAnimator.ofFloat(binding.optionTwoContainer, "translationY", -130f).start()
+
+        binding.optionTwoContainer.animate()
+            .alpha(1f)
+            .setDuration(300)
+            .setListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator?) {
+                    binding.optionTwoContainer.isClickable = true
+                    binding.optionTwoContainer.setOnClickListener {
+                        Toast.makeText(requireContext(), "Option 2", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            })
+
+        binding.optionOneContainer.animate()
+            .alpha(1f)
+            .setDuration(300)
+            .setListener(object :AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator?) {
+                    binding.optionOneContainer.isClickable = true
+                    binding.optionOneContainer.setOnClickListener {
+                        Toast.makeText(requireContext(), "Option 1", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            })
+
+        binding.transparentBackground.animate()
+            .alpha(0.9f)
+            .setDuration(300)
+            .setListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator?) {
+                    binding.transparentBackground.isClickable = true
+                }
+            })
+    }
+
+    private fun collapseFab() {
+        isExpanded = !isExpanded
+        ObjectAnimator.ofFloat(binding.plusImageview, "rotation",  -90f).start()
+        ObjectAnimator.ofFloat(binding.optionOneContainer, "translationY", 0f).start()
+        ObjectAnimator.ofFloat(binding.optionTwoContainer, "translationY", 0f).start()
+
+        binding.optionTwoContainer.animate()
+            .alpha(0f)
+            .setDuration(300)
+            .setListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator?) {
+                    binding.optionTwoContainer.isClickable = false
+                    binding.optionTwoContainer.setOnClickListener (null)
+                }
+            })
+
+        binding.optionOneContainer.animate()
+            .alpha(0f)
+            .setDuration(300)
+            .setListener(object :AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator?) {
+                    binding.optionOneContainer.isClickable = false
+                    binding.optionOneContainer.setOnClickListener (null)
+                }
+            })
+
+        binding.transparentBackground.animate()
+            .alpha(0f)
+            .setDuration(300)
+            .setListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator?) {
+                    binding.transparentBackground.isClickable = false
+                }
+            })
     }
 
 }

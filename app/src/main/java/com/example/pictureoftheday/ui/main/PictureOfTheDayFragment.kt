@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.*
+import android.webkit.WebView
 import androidx.fragment.app.Fragment
 import android.widget.TextView
 import android.widget.Toast
@@ -13,6 +14,7 @@ import coil.api.load
 import com.example.pictureoftheday.R
 import com.example.pictureoftheday.databinding.FragmentPictureOfTheDayBinding
 import com.example.pictureoftheday.ui.main.animations.AnimationsFragment
+import com.example.pictureoftheday.ui.main.animations.AnimationsFragmentBonus
 import com.example.pictureoftheday.ui.main.animations.ExplodeFragment
 import com.example.pictureoftheday.ui.main.utils.LayoutsFragment
 import com.example.pictureoftheday.ui.main.viewPager.MainViewPagerFragment
@@ -60,13 +62,20 @@ class PictureOfTheDayFragment : Fragment() {
                     Toast.makeText(requireContext(), "Ошибка: пустой URL", Toast.LENGTH_SHORT)
                         .show()
                 } else {
-
-                    //загрузка  картинки по url
-                    binding.PODImageView.load(url) {
-                        lifecycle(this@PictureOfTheDayFragment)
-                        error(R.drawable.ic_load_error_vector)
-                        placeholder(R.drawable.ic_no_photo_vector)
+                    if (serverResponseData.mediaType == "video") {
+                        val webView = WebView(requireContext())
+                        webView.layoutParams = binding.PODImageView.layoutParams
+                        webView.loadUrl(url)
+                    } else {
+                        //загрузка  картинки по url
+                        binding.PODImageView.load(url) {
+                            lifecycle(this@PictureOfTheDayFragment)
+                            error(R.drawable.ic_load_error_vector)
+                            placeholder(R.drawable.ic_no_photo_vector)
+                        }
                     }
+
+
 
                     //заполнение bottom sheet данными из API
                     val bottomSheetTitleTextView: TextView? =
@@ -110,7 +119,7 @@ class PictureOfTheDayFragment : Fragment() {
         val fab = view.findViewById<FloatingActionButton>(R.id.fab)
         fab.setOnClickListener {
             requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.container, AnimationsFragment())
+                .replace(R.id.container, AnimationsFragmentBonus())
                 .addToBackStack(null)
                 .commit()
         }

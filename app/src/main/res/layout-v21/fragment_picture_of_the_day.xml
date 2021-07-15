@@ -61,6 +61,16 @@
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_no_photo_vector" />
 
+        <WebView
+            android:id="@+id/yesterday_web_view"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/web_view_height"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="@id/POD_image_view"
+            app:layout_constraintEnd_toEndOf="@id/POD_image_view"
+            app:layout_constraintStart_toStartOf="@id/POD_image_view"
+            app:layout_constraintBottom_toBottomOf="@id/POD_image_view"/>
+
 
     </androidx.constraintlayout.motion.widget.MotionLayout>
 

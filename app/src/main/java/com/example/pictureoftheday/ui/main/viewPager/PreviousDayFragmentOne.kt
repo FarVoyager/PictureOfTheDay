@@ -1,11 +1,15 @@
 package com.example.pictureoftheday.ui.main.viewPager
 
+import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.WebChromeClient
+import android.webkit.WebViewClient
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModelProvider
 import coil.api.load
 import com.example.pictureoftheday.R
@@ -32,11 +36,13 @@ class PreviousDayFragmentOne : Fragment() {
         return binding.root
     }
 
+    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.getData(MINUS_DAYS_ONE).observe(viewLifecycleOwner, { renderData(it) })
     }
 
+    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     private fun renderData(data: AppState) {
         when (data) {
             is AppState.Success -> {
@@ -48,12 +54,24 @@ class PreviousDayFragmentOne : Fragment() {
                     Toast.makeText(requireContext(), "Ошибка: пустой URL", Toast.LENGTH_SHORT)
                         .show()
                 } else {
-
-                    //загрузка  картинки по url
-                    binding.yesterdayImageView.load(url) {
-                        lifecycle(this@PreviousDayFragmentOne)
-                        error(R.drawable.ic_load_error_vector)
-                        placeholder(R.drawable.ic_no_photo_vector)
+                    if (serverResponseData.mediaType == "video") {
+                        val webView = binding.yesterdayWebView
+                        webView.layoutParams = binding.yesterdayImageView.layoutParams
+                        webView.visibility = View.VISIBLE
+                        binding.yesterdayImageView.visibility = View.GONE
+                        webView.webViewClient = WebViewClient()
+                        webView.settings.javaScriptEnabled = true
+                        webView.settings.javaScriptCanOpenWindowsAutomatically = true
+                        webView.settings.mediaPlaybackRequiresUserGesture = false
+                        webView.webChromeClient = WebChromeClient();
+                        webView.loadUrl(url)
+                    } else {
+                        //загрузка  картинки по url
+                        binding.yesterdayImageView.load(url) {
+                            lifecycle(this@PreviousDayFragmentOne)
+                            error(R.drawable.ic_load_error_vector)
+                            placeholder(R.drawable.ic_no_photo_vector)
+                        }
                     }
                     binding.yesterdayDate.text = viewModel.getPreviousDateForRequest(MINUS_DAYS_ONE)
                     binding.yesterdayHeader.text = serverResponseData.title

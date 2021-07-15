@@ -8,4 +8,6 @@
     <dimen name="appbar_height">300dp</dimen>
     <dimen name="collapsing_toolbar_layout_text_size">20sp</dimen>
     <dimen name="collapsing_toolbar_layout_text_line_spacing">8dp</dimen>
+    <dimen name="web_view_height">400dp</dimen>
+    <dimen name="content_view_height">400dp</dimen>
 </resources>

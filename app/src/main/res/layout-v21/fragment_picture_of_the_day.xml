@@ -25,7 +25,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/input_layout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="350dp"
+            android:layout_width="370dp"
             android:layout_height="wrap_content"
             android:hint="@string/search_wiki"
             android:layout_marginTop="30dp"
@@ -98,8 +98,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_anchor="@id/bottom_app_bar"
-        app:srcCompat="@android:drawable/ic_input_add"
         app:tint="#FFFFFF" />
+
+    <ImageView
+        android:id="@+id/star_fab_imageview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center"
+        android:layout_marginBottom="40dp"
+        android:elevation="10dp"
+        app:srcCompat="@android:drawable/btn_star" />
 
 
     <include

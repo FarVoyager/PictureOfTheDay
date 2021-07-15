@@ -1,5 +1,7 @@
 package com.example.pictureoftheday.ui.main
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
 import android.content.Intent
 import android.net.Uri
@@ -53,6 +55,8 @@ class PictureOfTheDayFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.getData(0).observe(viewLifecycleOwner, { renderData(it) })
+
+        binding.inputLayout.alpha = 0f
 
         setWikiFieldIconClickAction()
         setBottomSheetBehavior(view.findViewById(R.id.bottom_sheet_container))
@@ -134,10 +138,22 @@ class PictureOfTheDayFragment : Fragment() {
 
         val fab = view.findViewById<FloatingActionButton>(R.id.fab)
         fab.setOnClickListener {
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.container, AnimationsFragmentBonus())
-                .addToBackStack(null)
-                .commit()
+
+            ObjectAnimator.ofFloat(binding.starFabImageview, "rotation", 0f, 360f).start()
+            ObjectAnimator.ofFloat(binding.starFabImageview, "translationY", -250f).start()
+            binding.starFabImageview.animate()
+                .alpha(0f)
+                .setDuration(300)
+                .setListener(object : AnimatorListenerAdapter() {
+                    override fun onAnimationEnd(animation: Animator?) {
+                        requireActivity().supportFragmentManager.beginTransaction()
+                            .replace(R.id.container, AnimationsFragmentBonus())
+                            .addToBackStack(null)
+                            .commit()
+                    }
+                })
+
+
         }
     }
 
@@ -189,8 +205,11 @@ class PictureOfTheDayFragment : Fragment() {
                 intent.data = wikiFieldText
                 startActivity(intent)
             } else {
-                ObjectAnimator.ofFloat(binding.inputLayout, "translationX", -1000f).start()
+                ObjectAnimator.ofFloat(binding.inputLayout, "translationX", -1050f).start()
                 ObjectAnimator.ofFloat(binding.wikiButton, "elevation", 10f).start()
+                binding.inputLayout.animate()
+                    .alpha(1f)
+                    .setDuration(400)
                 isWikiExpanded = !isWikiExpanded
             }
 

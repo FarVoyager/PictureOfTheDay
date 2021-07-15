@@ -46,6 +46,8 @@
         <item name="bottomSheetBackground">@color/bottomSheetBackgroundDark</item> <!-- ??? -->
         <item name="textColorThemed">@color/textColorDark</item> <!-- ??? -->
         <item name="menuItemColorThemed">@color/white</item> <!-- ??? -->
+        <item name="android:windowBackground">@color/colorBackgroundDark</item> <!-- ??? -->
+
 
 
     </style>

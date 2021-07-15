@@ -1,5 +1,6 @@
 package com.example.pictureoftheday.ui.main
 
+import android.animation.ObjectAnimator
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -29,6 +30,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.util.*
 
 class PictureOfTheDayFragment : Fragment() {
+
+    private var isWikiExpanded = false
 
     private var _binding: FragmentPictureOfTheDayBinding? = null
     private val binding get() = _binding!!
@@ -177,12 +180,20 @@ class PictureOfTheDayFragment : Fragment() {
     }
 
     private fun setWikiFieldIconClickAction() {
-        binding.inputLayout.setEndIconOnClickListener {
-            val intent = Intent(Intent.ACTION_VIEW)
-            val wikiFieldText =
-                Uri.parse("https://ru.wikipedia.org/wiki/${binding.inputEditText.text.toString()}")
-            intent.data = wikiFieldText
-            startActivity(intent)
+        binding.wikiButton.setOnClickListener {
+
+            if (isWikiExpanded) {
+                val intent = Intent(Intent.ACTION_VIEW)
+                val wikiFieldText =
+                    Uri.parse("https://ru.wikipedia.org/wiki/${binding.inputEditText.text.toString()}")
+                intent.data = wikiFieldText
+                startActivity(intent)
+            } else {
+                ObjectAnimator.ofFloat(binding.inputLayout, "translationX", -1000f).start()
+                ObjectAnimator.ofFloat(binding.wikiButton, "elevation", 10f).start()
+                isWikiExpanded = !isWikiExpanded
+            }
+
         }
     }
 

@@ -2,7 +2,7 @@
 <resources>
     <dimen name="wiki_box_corner_value">20dp</dimen>
     <dimen name="nav_drawer_margin_main">8dp</dimen>
-    <dimen name="wiki_button_margin_end">8dp</dimen>
+    <dimen name="wiki_button_margin_end">20dp</dimen>
     <dimen name="wiki_button_margin_bottom">14dp</dimen>
     <dimen name="motion_layout_padding">10dp</dimen>
     <dimen name="appbar_height">300dp</dimen>

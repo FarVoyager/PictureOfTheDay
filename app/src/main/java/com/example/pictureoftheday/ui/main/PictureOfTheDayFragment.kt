@@ -153,7 +153,7 @@ class PictureOfTheDayFragment : Fragment() {
                 .setListener(object : AnimatorListenerAdapter() {
                     override fun onAnimationEnd(animation: Animator?) {
                         requireActivity().supportFragmentManager.beginTransaction()
-                            .replace(R.id.container, AnimationsFragmentBonus())
+                            .replace(R.id.container, MainViewPagerFragment())
                             .addToBackStack(null)
                             .commit()
                     }
@@ -184,7 +184,7 @@ class PictureOfTheDayFragment : Fragment() {
             }
             R.id.app_bar_view_pager -> {
                 requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.container, MainViewPagerFragment())
+                    .replace(R.id.container, AnimationsFragmentBonus())
                     .addToBackStack(null)
                     .commit()
             }

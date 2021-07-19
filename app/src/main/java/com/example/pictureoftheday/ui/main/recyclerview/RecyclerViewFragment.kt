@@ -10,22 +10,13 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pictureoftheday.R
-import com.example.pictureoftheday.databinding.FragmentPictureOfTheDayBinding
-import com.example.pictureoftheday.databinding.FragmentRecyclerViewBinding
-import com.example.pictureoftheday.databinding.RecyclerItemEarthBinding
-import com.example.pictureoftheday.databinding.RecyclerItemMarsBinding
+import com.example.pictureoftheday.databinding.*
 
 
 class RecyclerViewFragment : Fragment() {
 
     private var _binding: FragmentRecyclerViewBinding? = null
     private val binding get() = _binding!!
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,6 +38,8 @@ class RecyclerViewFragment : Fragment() {
             Data("Earth", "best"),
             Data("Mars", null)
         )
+        data.add(0, Data("Header"))
+
         binding.lessonRecyclerView.adapter = RecyclerViewAdapter(
             object : RecyclerViewAdapter.OnListItemClickListener {
                 override fun onItemClick(data: Data) {
@@ -66,37 +59,49 @@ class RecyclerViewFragment : Fragment() {
     class RecyclerViewAdapter(
         private var onListItemClickListener: OnListItemClickListener,
         private var data: List<Data>
-    ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    ) : RecyclerView.Adapter<RecyclerViewAdapter.BaseViewHolder>() {
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-//            val inflater = LayoutInflater.from(parent.context)
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
             val itemBindingEarth =
                 RecyclerItemEarthBinding.inflate(LayoutInflater.from(parent.context), parent, false)
             val itemBindingMars =
                 RecyclerItemMarsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-            return if (viewType == TYPE_EARTH) {
-                EarthViewHolder(
-                    itemBindingEarth
+            val itemBindingHeader =
+                RecyclerViewHeaderBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
                 )
-            } else {
-                MarsViewHolder(
-                    itemBindingMars
-                )
+            return when (viewType) {
+                TYPE_EARTH -> EarthViewHolder(itemBindingEarth)
+                TYPE_MARS -> MarsViewHolder(itemBindingMars)
+                else -> HeaderViewHolder(itemBindingHeader)
             }
         }
 
-        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-            if (getItemViewType(position) == TYPE_EARTH) {
-                holder as EarthViewHolder
-                holder.bind(data[position])
-            } else {
-                holder as MarsViewHolder
-                holder.bind(data[position])
+        override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
+            when (getItemViewType(position)) {
+                TYPE_EARTH -> {
+                    holder as EarthViewHolder
+                    holder.bind(data[position])
+                }
+                TYPE_MARS -> {
+                    holder as MarsViewHolder
+                    holder.bind(data[position])
+                }
+                else -> {
+                    holder as HeaderViewHolder
+                    holder.bind(data[position])
+                }
             }
         }
 
         override fun getItemViewType(position: Int): Int {
-            return if (data[position].someDescription.isNullOrBlank()) TYPE_MARS else TYPE_EARTH
+            return when {
+                position == 0 -> TYPE_HEADER
+                data[position].someDescription.isNullOrBlank() -> TYPE_MARS
+                else -> TYPE_EARTH
+            }
         }
 
         override fun getItemCount(): Int {
@@ -104,8 +109,8 @@ class RecyclerViewFragment : Fragment() {
         }
 
         inner class EarthViewHolder(private val earthBinding: RecyclerItemEarthBinding) :
-            RecyclerView.ViewHolder(earthBinding.root) {
-            fun bind(data: Data) {
+            BaseViewHolder(earthBinding.root) {
+            override fun bind(data: Data) {
                 if (layoutPosition != RecyclerView.NO_POSITION) {
                     earthBinding.descriptionTextView
                         .text = data.someDescription
@@ -117,24 +122,35 @@ class RecyclerViewFragment : Fragment() {
         }
 
         inner class MarsViewHolder(private val marsBinding: RecyclerItemMarsBinding) :
-            RecyclerView.ViewHolder(marsBinding.root) {
-            fun bind(data: Data) {
+            BaseViewHolder(marsBinding.root) {
+            override fun bind(data: Data) {
                 marsBinding.marsImageView.setOnClickListener {
                     onListItemClickListener.onItemClick(data)
                 }
             }
         }
 
+        inner class HeaderViewHolder(private val headerBinding: RecyclerViewHeaderBinding) :
+            BaseViewHolder(headerBinding.root) {
+            override fun bind(data: Data) {
+                headerBinding.header.setOnClickListener {
+                    onListItemClickListener.onItemClick(data)
+                }
+            }
+        }
 
         companion object {
             private const val TYPE_EARTH = 0
             private const val TYPE_MARS = 1
+            private const val TYPE_HEADER = 2
         }
 
         interface OnListItemClickListener {
             fun onItemClick(data: Data)
         }
 
+        abstract class BaseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+            abstract fun bind(data: Data)
+        }
     }
-
 }

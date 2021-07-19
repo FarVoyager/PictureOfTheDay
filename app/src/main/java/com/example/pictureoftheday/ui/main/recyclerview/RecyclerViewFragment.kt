@@ -30,17 +30,17 @@ class RecyclerViewFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         val data = arrayListOf(
-            Data("Earth", "bost"),
-            Data("Earth", "bist"),
             Data("Mars", ""),
-            Data("Earth", "bast"),
-            Data("Earth", "bust"),
-            Data("Earth", "best"),
-            Data("Mars", null)
+//            Data("Earth", "bist"),
+//            Data("Mars", ""),
+//            Data("Earth", "bast"),
+//            Data("Earth", "bust"),
+//            Data("Earth", "best"),
+//            Data("Mars", null)
         )
         data.add(0, Data("Header"))
 
-        binding.lessonRecyclerView.adapter = RecyclerViewAdapter(
+        val adapter = RecyclerViewAdapter(
             object : RecyclerViewAdapter.OnListItemClickListener {
                 override fun onItemClick(data: Data) {
                     Toast.makeText(requireContext(), data.someText, Toast.LENGTH_SHORT).show()
@@ -48,7 +48,13 @@ class RecyclerViewFragment : Fragment() {
             },
             data
         )
+        binding.lessonRecyclerView.adapter = adapter
+        binding.recyclerFragmentFAB.setOnClickListener {
+            adapter.appendItem()
+        }
     }
+
+
 
     data class Data(
         val someText: String = "Text",
@@ -58,7 +64,7 @@ class RecyclerViewFragment : Fragment() {
 
     class RecyclerViewAdapter(
         private var onListItemClickListener: OnListItemClickListener,
-        private var data: List<Data>
+        private var data: MutableList<Data>
     ) : RecyclerView.Adapter<RecyclerViewAdapter.BaseViewHolder>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
@@ -108,6 +114,15 @@ class RecyclerViewFragment : Fragment() {
             return data.size
         }
 
+        fun appendItem() {
+            data.add(generateItem())
+            notifyItemInserted(itemCount - 1)
+        }
+
+        private fun generateItem(): RecyclerViewFragment.Data {
+            return Data("Mars", "")
+        }
+
         inner class EarthViewHolder(private val earthBinding: RecyclerItemEarthBinding) :
             BaseViewHolder(earthBinding.root) {
             override fun bind(data: Data) {
@@ -127,6 +142,22 @@ class RecyclerViewFragment : Fragment() {
                 marsBinding.marsImageView.setOnClickListener {
                     onListItemClickListener.onItemClick(data)
                 }
+                marsBinding.addItemImageView.setOnClickListener {
+                    addItem()
+                    marsBinding.removeItemImageView.setOnClickListener {
+                        removeItem()
+                    }
+                }
+            }
+
+            private fun removeItem() {
+                data.removeAt(layoutPosition)
+                notifyItemRemoved(layoutPosition)
+            }
+
+            private fun addItem() {
+                data.add(layoutPosition, generateItem())
+                notifyItemInserted(layoutPosition)
             }
         }
 

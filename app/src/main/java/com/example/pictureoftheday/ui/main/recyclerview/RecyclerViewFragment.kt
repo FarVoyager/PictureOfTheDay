@@ -30,7 +30,7 @@ class RecyclerViewFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         val data = arrayListOf(
-            Data("Mars", ""),
+            Pair(Data("Mars", ""), false)
 //            Data("Earth", "bist"),
 //            Data("Mars", ""),
 //            Data("Earth", "bast"),
@@ -38,7 +38,7 @@ class RecyclerViewFragment : Fragment() {
 //            Data("Earth", "best"),
 //            Data("Mars", null)
         )
-        data.add(0, Data("Header"))
+        data.add(0, Pair(Data("Header"), false))
 
         val adapter = RecyclerViewAdapter(
             object : RecyclerViewAdapter.OnListItemClickListener {
@@ -61,7 +61,7 @@ class RecyclerViewFragment : Fragment() {
 
     class RecyclerViewAdapter(
         private var onListItemClickListener: OnListItemClickListener,
-        private var data: MutableList<Data>
+        private var data: MutableList<Pair<Data, Boolean>>
     ) : RecyclerView.Adapter<RecyclerViewAdapter.BaseViewHolder>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
@@ -102,7 +102,7 @@ class RecyclerViewFragment : Fragment() {
         override fun getItemViewType(position: Int): Int {
             return when {
                 position == 0 -> TYPE_HEADER
-                data[position].someDescription.isNullOrBlank() -> TYPE_MARS
+                data[position].first.someDescription.isNullOrBlank() -> TYPE_MARS
                 else -> TYPE_EARTH
             }
         }
@@ -116,17 +116,16 @@ class RecyclerViewFragment : Fragment() {
             notifyItemInserted(itemCount - 1)
         }
 
-        private fun generateItem(): RecyclerViewFragment.Data {
-            return Data("Mars", "")
+        private fun generateItem(): Pair<Data, Boolean> {
+            return Pair(Data("Mars", ""), false)
         }
 
         inner class EarthViewHolder(private val earthBinding: RecyclerItemEarthBinding) :
             BaseViewHolder(earthBinding.root) {
-            override fun bind(data: Data) {
+            override fun bind(data: Pair<Data, Boolean>) {
                 if (layoutPosition != RecyclerView.NO_POSITION) {
-                    earthBinding.descriptionTextView.text = data.someDescription
                     earthBinding.earthImageView.setOnClickListener {
-                        onListItemClickListener.onItemClick(data)
+                        onListItemClickListener.onItemClick(data.first)
                         earthBinding.addItemImageView.setOnClickListener {
                             addItem()
                             earthBinding.removeItemImageView.setOnClickListener {
@@ -151,9 +150,9 @@ class RecyclerViewFragment : Fragment() {
 
         inner class MarsViewHolder(private val marsBinding: RecyclerItemMarsBinding) :
             BaseViewHolder(marsBinding.root) {
-            override fun bind(data: Data) {
+            override fun bind(data: Pair<Data, Boolean>) {
                 marsBinding.marsImageView.setOnClickListener {
-                    onListItemClickListener.onItemClick(data)
+                    onListItemClickListener.onItemClick(data.first)
                 }
                 marsBinding.addItemImageView.setOnClickListener {
                     addItem()
@@ -161,10 +160,19 @@ class RecyclerViewFragment : Fragment() {
                         removeItem()
                     }
                 }
-
                 marsBinding.moveItemDown.setOnClickListener { moveItemDown() }
                 marsBinding.moveItemUp.setOnClickListener { moveItemUp() }
+                marsBinding.marsDescriptionTextView.visibility =
+                    if (data.second) View.VISIBLE else View.GONE
+                marsBinding.title.setOnClickListener { toggleText() }
 
+            }
+
+            private fun toggleText() {
+                data[layoutPosition] = data[layoutPosition].let {
+                    it.first to !it.second
+                }
+                notifyItemChanged(layoutPosition)
             }
 
             private fun moveItemUp() {
@@ -198,9 +206,9 @@ class RecyclerViewFragment : Fragment() {
 
         inner class HeaderViewHolder(private val headerBinding: RecyclerViewHeaderBinding) :
             BaseViewHolder(headerBinding.root) {
-            override fun bind(data: Data) {
+            override fun bind(data: Pair<Data, Boolean> ) {
                 headerBinding.header.setOnClickListener {
-                    onListItemClickListener.onItemClick(data)
+                    onListItemClickListener.onItemClick(data.first)
                 }
             }
         }
@@ -216,7 +224,7 @@ class RecyclerViewFragment : Fragment() {
         }
 
         abstract class BaseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-            abstract fun bind(data: Data)
+            abstract fun bind(data: Pair<Data, Boolean> )
         }
     }
 }

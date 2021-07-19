@@ -54,13 +54,10 @@ class RecyclerViewFragment : Fragment() {
         }
     }
 
-
-
     data class Data(
         val someText: String = "Text",
         val someDescription: String? = "Description"
     )
-
 
     class RecyclerViewAdapter(
         private var onListItemClickListener: OnListItemClickListener,
@@ -127,13 +124,29 @@ class RecyclerViewFragment : Fragment() {
             BaseViewHolder(earthBinding.root) {
             override fun bind(data: Data) {
                 if (layoutPosition != RecyclerView.NO_POSITION) {
-                    earthBinding.descriptionTextView
-                        .text = data.someDescription
-                    earthBinding.wikiImageView.setOnClickListener {
+                    earthBinding.descriptionTextView.text = data.someDescription
+                    earthBinding.earthImageView.setOnClickListener {
                         onListItemClickListener.onItemClick(data)
+                        earthBinding.addItemImageView.setOnClickListener {
+                            addItem()
+                            earthBinding.removeItemImageView.setOnClickListener {
+                                removeItem()
+                            }
+                        }
                     }
                 }
             }
+
+            private fun removeItem() {
+                data.removeAt(layoutPosition)
+                notifyItemRemoved(layoutPosition)
+            }
+
+            private fun addItem() {
+                data.add(layoutPosition, generateItem())
+                notifyItemInserted(layoutPosition)
+            }
+
         }
 
         inner class MarsViewHolder(private val marsBinding: RecyclerItemMarsBinding) :
@@ -147,6 +160,28 @@ class RecyclerViewFragment : Fragment() {
                     marsBinding.removeItemImageView.setOnClickListener {
                         removeItem()
                     }
+                }
+
+                marsBinding.moveItemDown.setOnClickListener { moveItemDown() }
+                marsBinding.moveItemUp.setOnClickListener { moveItemUp() }
+
+            }
+
+            private fun moveItemUp() {
+                layoutPosition.takeIf { it > 1 }?.also { currentPosition ->
+                    data.removeAt(currentPosition).apply {
+                        data.add(currentPosition - 1, this)
+                    }
+                    notifyItemMoved(currentPosition, currentPosition - 1)
+                }
+            }
+
+            private fun moveItemDown() {
+                layoutPosition.takeIf { it < data.size - 1}?.also { currentPosition ->
+                    data.removeAt(currentPosition).apply {
+                        data.add(currentPosition + 1, this)
+                    }
+                    notifyItemMoved(currentPosition, currentPosition + 1)
                 }
             }
 

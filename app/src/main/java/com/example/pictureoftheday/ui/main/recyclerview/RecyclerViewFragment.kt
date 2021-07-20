@@ -1,20 +1,20 @@
 package com.example.pictureoftheday.ui.main.recyclerview
 
+import android.graphics.Canvas
 import android.graphics.Color
+import android.nfc.Tag
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.widget.AppCompatImageView
-import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.MotionEventCompat
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.example.pictureoftheday.R
 import com.example.pictureoftheday.databinding.*
+import kotlin.math.abs
 
 
 class RecyclerViewFragment : Fragment() {
@@ -32,9 +32,6 @@ class RecyclerViewFragment : Fragment() {
         _binding = FragmentRecyclerViewBinding.inflate(inflater, container, false)
         return binding.root
     }
-
-
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
@@ -88,11 +85,7 @@ class RecyclerViewFragment : Fragment() {
             val itemBindingMars =
                 RecyclerItemMarsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
             val itemBindingHeader =
-                RecyclerViewHeaderBinding.inflate(
-                    LayoutInflater.from(parent.context),
-                    parent,
-                    false
-                )
+                RecyclerViewHeaderBinding.inflate(LayoutInflater.from(parent.context), parent, false)
             return when (viewType) {
                 TYPE_EARTH -> EarthViewHolder(itemBindingEarth)
                 TYPE_MARS -> MarsViewHolder(itemBindingMars)
@@ -116,6 +109,19 @@ class RecyclerViewFragment : Fragment() {
                 }
             }
         }
+
+//        override fun onBindViewHolder(
+//            holder: MarsViewHolder,
+//            position: Int,
+//            payloads: MutableList<Any>
+//        ) {
+//            if (payloads.isEmpty()) super.onBindViewHolder(holder, position, payloads)
+//            else {
+//                if (payloads.any { it is Pair<*,*> })
+//                    holder.itemView
+//            }
+//        }
+
 
         override fun getItemViewType(position: Int): Int {
             return when {
@@ -168,6 +174,7 @@ class RecyclerViewFragment : Fragment() {
 
         inner class MarsViewHolder(private val marsBinding: RecyclerItemMarsBinding) :
             BaseViewHolder(marsBinding.root), ItemTouchHelperViewHolder {
+
             override fun bind(data: Pair<Data, Boolean>) {
                 marsBinding.marsImageView.setOnClickListener {
                     onListItemClickListener.onItemClick(data.first)
@@ -239,9 +246,11 @@ class RecyclerViewFragment : Fragment() {
 
         inner class HeaderViewHolder(private val headerBinding: RecyclerViewHeaderBinding) :
             BaseViewHolder(headerBinding.root) {
-            override fun bind(data: Pair<Data, Boolean> ) {
-                headerBinding.header.setOnClickListener {
-                    onListItemClickListener.onItemClick(data.first)
+            override fun bind(dataItem: Pair<Data, Boolean> ) {
+                itemView.setOnClickListener {
+                    onListItemClickListener.onItemClick(dataItem.first)
+//                    data[1] = Pair(Data("Jupiter", ""), false)
+//                    notifyItemChanged(1, Pair(Data("", ""), false))
                 }
             }
         }
@@ -309,6 +318,25 @@ class RecyclerViewFragment : Fragment() {
                 super.clearView(recyclerView, viewHolder)
                 val itemViewHolder = viewHolder as ItemTouchHelperViewHolder
                 itemViewHolder.onItemClear()
+            }
+
+            override fun onChildDraw(
+                c: Canvas,
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                dX: Float,
+                dY: Float,
+                actionState: Int,
+                isCurrentlyActive: Boolean
+            ) {
+                if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+                    val width = viewHolder.itemView.width.toFloat()
+                    val alpha = 1.0f - abs(dX) / width
+                    viewHolder.itemView.alpha = alpha
+                    viewHolder.itemView.translationX = dX
+                } else {
+                    super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                }
             }
         }
 

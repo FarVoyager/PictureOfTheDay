@@ -67,10 +67,11 @@ class RecyclerViewNotesFragment : Fragment() {
             builder.setTitle("Create a note")
                 .setMessage("Which note do you want to add?")
                 .setPositiveButton("Task") { dialog, which ->
-                    data.add(Pair(Data("Task", "Description"), true))
+                    adapter.appendItem(Pair(Data("Task", "Description"), true))
+
                 }
                 .setNegativeButton("Simple note") { dialog, which ->
-                    data.add(Pair(Data("Simple note", "Description"), false))
+                    adapter.appendItem(Pair(Data("Simple note", "Description"), false))
 
                 }
             builder.create().apply { show() }
@@ -122,7 +123,7 @@ class RecyclerViewNotesFragment : Fragment() {
         override fun getItemViewType(position: Int): Int {
             return when {
                 data[position].first.isImaged -> TYPE_IMG
-                else -> TYPE_IMG
+                else -> TYPE_SIMPLE
             }
         }
 
@@ -130,8 +131,8 @@ class RecyclerViewNotesFragment : Fragment() {
             return data.size
         }
 
-        fun appendItem() {
-            data.add(generateItem())
+        fun appendItem(dataPair: Pair<Data, Boolean>) {
+            data.add(dataPair)
             notifyItemInserted(itemCount - 1)
         }
 

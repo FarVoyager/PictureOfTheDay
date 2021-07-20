@@ -25,6 +25,17 @@
         app:layout_constraintStart_toEndOf="@+id/checkBox"
         app:layout_constraintTop_toTopOf="@+id/checkBox" />
 
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/expandDescriptionBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        android:tint="@color/design_default_color_error"
+        app:layout_constraintEnd_toStartOf="@id/moveItemUp"
+        app:layout_constraintBottom_toBottomOf="@id/checkBox"
+        app:layout_constraintTop_toTopOf="@id/checkBox"
+        app:srcCompat="@android:drawable/ic_menu_info_details"
+        />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/descriptionTextView"
@@ -43,7 +54,7 @@
         android:id="@+id/moveItemUp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="30dp"
+        android:layout_marginRight="20dp"
         android:tint="@color/design_default_color_error"
         app:layout_constraintEnd_toStartOf="@id/moveItemDown"
         app:layout_constraintTop_toTopOf="@id/checkBox"
@@ -55,7 +66,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
-        android:layout_marginRight="40dp"
+        android:layout_marginRight="30dp"
         android:tint="@color/design_default_color_error"
         app:layout_constraintTop_toTopOf="@id/checkBox"
         app:layout_constraintEnd_toStartOf="@id/addItemImageView"

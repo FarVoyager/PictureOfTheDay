@@ -1,17 +1,17 @@
 package com.example.pictureoftheday.ui.main.recyclerview
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.graphics.Canvas
 import android.graphics.Color
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.MotionEvent
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Toast
 import androidx.core.view.MotionEventCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.example.pictureoftheday.R
 import com.example.pictureoftheday.databinding.*
 import kotlin.math.abs
 
@@ -35,7 +35,10 @@ class RecyclerViewNotesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         val data = arrayListOf(
-            Pair(Data("Mars", ""), false)
+            Pair(Data("Mars", "", false), false),
+            Pair(Data("Earth", "Desc", true), false)
+
+
 //            Data("Earth", "bist"),
 //            Data("Mars", ""),
 //            Data("Earth", "bast"),
@@ -60,7 +63,20 @@ class RecyclerViewNotesFragment : Fragment() {
         )
         binding.lessonRecyclerView.adapter = adapter
         binding.recyclerFragmentFAB.setOnClickListener {
-            adapter.appendItem()
+        val builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
+            builder.setTitle("Create a note")
+                .setMessage("Which note do you want to add?")
+                .setPositiveButton("Task") { dialog, which ->
+                    data.add(Pair(Data("Task", "Description"), true))
+                }
+                .setNegativeButton("Simple note") { dialog, which ->
+                    data.add(Pair(Data("Simple note", "Description"), false))
+
+                }
+            builder.create().apply { show() }
+
+
+            //            adapter.appendItem()
         }
         itemTouchHelper = ItemTouchHelper(RecyclerViewAdapter.ItemTouchHelperCallback(adapter))
         itemTouchHelper.attachToRecyclerView(binding.lessonRecyclerView)
@@ -69,7 +85,8 @@ class RecyclerViewNotesFragment : Fragment() {
 
     data class Data(
         val noteTitle: String = "Title",
-        val noteDescription: String? = "Description"
+        val noteDescription: String? = "Description",
+        val isImaged: Boolean = false
     )
 
     class RecyclerViewAdapter(
@@ -104,9 +121,8 @@ class RecyclerViewNotesFragment : Fragment() {
 
         override fun getItemViewType(position: Int): Int {
             return when {
-                data[position].first. == 0 -> TYPE_HEADER
-                data[position].first.noteDescription.isNullOrBlank() -> TYPE_MARS
-                else -> TYPE_EARTH
+                data[position].first.isImaged -> TYPE_IMG
+                else -> TYPE_IMG
             }
         }
 
@@ -124,94 +140,30 @@ class RecyclerViewNotesFragment : Fragment() {
         }
 
         inner class SimpleNoteViewHolder(private val bindingSimple: RecyclerItemSimpleBinding) :
-            BaseViewHolder(bindingSimple.root) {
+            BaseViewHolder(bindingSimple.root), ItemTouchHelperViewHolder {
             override fun bind(data: Pair<Data, Boolean>) {
-                if (layoutPosition != RecyclerView.NO_POSITION) {
-                    bindingSimple.earthImageView.setOnClickListener {
-                        onListItemClickListener.onItemClick(data.first)
-                        bindingSimple.addItemImageView.setOnClickListener {
-                            addItem()
-                            bindingSimple.removeItemImageView.setOnClickListener {
-                                removeItem()
-                            }
-                        }
-                    }
-                }
-            }
 
-            private fun removeItem() {
-                data.removeAt(layoutPosition)
-                notifyItemRemoved(layoutPosition)
-            }
-
-            private fun addItem() {
-                data.add(layoutPosition, generateItem())
-                notifyItemInserted(layoutPosition)
-            }
-
-        }
-
-        inner class ImagedNoteViewHolder(private val bindingImg: RecyclerItemImgBinding) :
-            BaseViewHolder(bindingImg.root), ItemTouchHelperViewHolder {
-
-            override fun bind(data: Pair<Data, Boolean>) {
-                bindingImg.marsImageView.setOnClickListener {
+                bindingSimple.expandDescriptionBtn.setOnClickListener {
                     onListItemClickListener.onItemClick(data.first)
                 }
-                bindingImg.addItemImageView.setOnClickListener {
-                    addItem()
-                    bindingImg.removeItemImageView.setOnClickListener {
-                        removeItem()
+                bindingSimple.addItemImageView.setOnClickListener {
+                    addItem(layoutPosition)
+                    bindingSimple.removeItemImageView.setOnClickListener {
+                        removeItem(layoutPosition)
                     }
                 }
-                bindingImg.moveItemDown.setOnClickListener { moveItemDown() }
-                bindingImg.moveItemUp.setOnClickListener { moveItemUp() }
-                bindingImg.descriptionTextView.visibility =
+                bindingSimple.moveItemDown.setOnClickListener { moveItemDown(layoutPosition) }
+                bindingSimple.moveItemUp.setOnClickListener { moveItemUp(layoutPosition) }
+                bindingSimple.descriptionTextView.visibility =
                     if (data.second) View.VISIBLE else View.GONE
-                bindingImg.title.setOnClickListener { toggleText() }
+                bindingSimple.expandDescriptionBtn.setOnClickListener { toggleText(layoutPosition) }
 
-                bindingImg.dragHandleImageView.setOnTouchListener { v, event ->
+                bindingSimple.dragHandleImageView.setOnTouchListener { v, event ->
                     if (MotionEventCompat.getActionMasked(event) == MotionEvent.ACTION_DOWN) {
                         dragListener.onStartDrag(this)
                     }
                     false
                 }
-
-            }
-
-            private fun toggleText() {
-                data[layoutPosition] = data[layoutPosition].let {
-                    it.first to !it.second
-                }
-                notifyItemChanged(layoutPosition)
-            }
-
-            private fun moveItemUp() {
-                layoutPosition.takeIf { it > 1 }?.also { currentPosition ->
-                    data.removeAt(currentPosition).apply {
-                        data.add(currentPosition - 1, this)
-                    }
-                    notifyItemMoved(currentPosition, currentPosition - 1)
-                }
-            }
-
-            private fun moveItemDown() {
-                layoutPosition.takeIf { it < data.size - 1}?.also { currentPosition ->
-                    data.removeAt(currentPosition).apply {
-                        data.add(currentPosition + 1, this)
-                    }
-                    notifyItemMoved(currentPosition, currentPosition + 1)
-                }
-            }
-
-            private fun removeItem() {
-                data.removeAt(layoutPosition)
-                notifyItemRemoved(layoutPosition)
-            }
-
-            private fun addItem() {
-                data.add(layoutPosition, generateItem())
-                notifyItemInserted(layoutPosition)
             }
 
             override fun onItemSelected() {
@@ -223,6 +175,74 @@ class RecyclerViewNotesFragment : Fragment() {
             }
         }
 
+        inner class ImagedNoteViewHolder(private val bindingImg: RecyclerItemImgBinding) :
+            BaseViewHolder(bindingImg.root), ItemTouchHelperViewHolder {
+
+            override fun bind(data: Pair<Data, Boolean>) {
+                    bindingImg.checkBox.setOnClickListener {
+                        onListItemClickListener.onItemClick(data.first)
+                    }
+                    bindingImg.addItemImageView.setOnClickListener {
+                        addItem(layoutPosition)
+                        bindingImg.removeItemImageView.setOnClickListener {
+                            removeItem(layoutPosition)
+                        }
+                    }
+                    bindingImg.moveItemDown.setOnClickListener { moveItemDown(layoutPosition) }
+                    bindingImg.moveItemUp.setOnClickListener { moveItemUp(layoutPosition) }
+                    bindingImg.descriptionTextView.visibility =
+                        if (data.second) View.VISIBLE else View.GONE
+                    bindingImg.expandDescriptionBtn.setOnClickListener { toggleText(layoutPosition) }
+
+                    bindingImg.dragHandleImageView.setOnTouchListener { v, event ->
+                        if (MotionEventCompat.getActionMasked(event) == MotionEvent.ACTION_DOWN) {
+                            dragListener.onStartDrag(this)
+                        }
+                        false
+                    }
+                }
+            override fun onItemSelected() {
+                itemView.setBackgroundColor(Color.LTGRAY)
+            }
+            override fun onItemClear() {
+                itemView.setBackgroundColor(0)
+            }
+        }
+
+        private fun toggleText(layoutPosition: Int) {
+            data[layoutPosition] = data[layoutPosition].let {
+                it.first to !it.second
+            }
+            notifyItemChanged(layoutPosition)
+        }
+
+        private fun moveItemUp(layoutPosition: Int) {
+            layoutPosition.takeIf { it > 0 }?.also { currentPosition ->
+                data.removeAt(currentPosition).apply {
+                    data.add(currentPosition - 1, this)
+                }
+                notifyItemMoved(currentPosition, currentPosition - 1)
+            }
+        }
+
+        private fun removeItem(layoutPosition: Int) {
+            data.removeAt(layoutPosition)
+            notifyItemRemoved(layoutPosition)
+        }
+
+        private fun addItem(layoutPosition: Int) {
+            data.add(layoutPosition, generateItem())
+            notifyItemInserted(layoutPosition)
+        }
+
+        private fun moveItemDown(layoutPosition: Int) {
+            layoutPosition.takeIf { it < data.size - 1}?.also { currentPosition ->
+                data.removeAt(currentPosition).apply {
+                    data.add(currentPosition + 1, this)
+                }
+                notifyItemMoved(currentPosition, currentPosition + 1)
+            }
+        }
 
         companion object {
             private const val TYPE_SIMPLE = 0
@@ -324,6 +344,19 @@ class RecyclerViewNotesFragment : Fragment() {
             fun onStartDrag(viewHolder: RecyclerView.ViewHolder)
         }
 
+    }
+
+    override fun onCreateContextMenu(
+        menu: ContextMenu,
+        v: View,
+        menuInfo: ContextMenu.ContextMenuInfo?
+    ) {
+        super.onCreateContextMenu(menu, v, menuInfo)
+        requireActivity().menuInflater.apply { inflate(R.menu.add_note_menu, menu) }
+    }
+
+    override fun onContextItemSelected(item: MenuItem): Boolean {
+        return super.onContextItemSelected(item)
     }
 
 }

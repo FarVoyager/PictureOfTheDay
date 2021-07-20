@@ -9,7 +9,6 @@ import android.os.Build
 import android.os.Bundle
 import android.view.*
 import android.webkit.WebChromeClient
-import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.fragment.app.Fragment
 import android.widget.TextView
@@ -20,10 +19,8 @@ import androidx.lifecycle.ViewModelProvider
 import coil.api.load
 import com.example.pictureoftheday.R
 import com.example.pictureoftheday.databinding.FragmentPictureOfTheDayBinding
-import com.example.pictureoftheday.ui.main.animations.AnimationsFragment
 import com.example.pictureoftheday.ui.main.animations.AnimationsFragmentBonus
-import com.example.pictureoftheday.ui.main.animations.ExplodeFragment
-import com.example.pictureoftheday.ui.main.recyclerview.RecyclerViewFragment
+import com.example.pictureoftheday.ui.main.recyclerview.RecyclerViewNotesFragment
 import com.example.pictureoftheday.ui.main.utils.LayoutsFragment
 import com.example.pictureoftheday.ui.main.viewPager.MainViewPagerFragment
 import com.example.pictureoftheday.ui.main.viewmodel.AppState
@@ -174,7 +171,7 @@ class PictureOfTheDayFragment : Fragment() {
         when (item.itemId) {
             R.id.app_bar_fav ->
                 requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.container, RecyclerViewFragment())
+                    .replace(R.id.container, RecyclerViewNotesFragment())
                     .addToBackStack(null)
                     .commit()
             R.id.app_bar_settings -> {

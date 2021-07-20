@@ -2,7 +2,6 @@ package com.example.pictureoftheday.ui.main.recyclerview
 
 import android.graphics.Canvas
 import android.graphics.Color
-import android.nfc.Tag
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -17,7 +16,7 @@ import com.example.pictureoftheday.databinding.*
 import kotlin.math.abs
 
 
-class RecyclerViewFragment : Fragment() {
+class RecyclerViewNotesFragment : Fragment() {
 
     private var _binding: FragmentRecyclerViewBinding? = null
     private val binding get() = _binding!!
@@ -49,7 +48,7 @@ class RecyclerViewFragment : Fragment() {
         val adapter = RecyclerViewAdapter(
             object : RecyclerViewAdapter.OnListItemClickListener {
                 override fun onItemClick(data: Data) {
-                    Toast.makeText(requireContext(), data.someText, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), data.noteTitle, Toast.LENGTH_SHORT).show()
                 }
             },
             data,
@@ -69,8 +68,8 @@ class RecyclerViewFragment : Fragment() {
     }
 
     data class Data(
-        val someText: String = "Text",
-        val someDescription: String? = "Description"
+        val noteTitle: String = "Title",
+        val noteDescription: String? = "Description"
     )
 
     class RecyclerViewAdapter(
@@ -80,53 +79,33 @@ class RecyclerViewFragment : Fragment() {
     ) : RecyclerView.Adapter<RecyclerViewAdapter.BaseViewHolder>(), ItemTouchHelperAdapter {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
-            val itemBindingEarth =
-                RecyclerItemEarthBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-            val itemBindingMars =
-                RecyclerItemMarsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-            val itemBindingHeader =
-                RecyclerViewHeaderBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            val itemBindingSimple =
+                RecyclerItemSimpleBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            val itemBindingImg =
+                RecyclerItemImgBinding.inflate(LayoutInflater.from(parent.context), parent, false)
             return when (viewType) {
-                TYPE_EARTH -> EarthViewHolder(itemBindingEarth)
-                TYPE_MARS -> MarsViewHolder(itemBindingMars)
-                else -> HeaderViewHolder(itemBindingHeader)
+                TYPE_SIMPLE -> SimpleNoteViewHolder(itemBindingSimple)
+                else -> ImagedNoteViewHolder(itemBindingImg)
             }
         }
 
         override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
             when (getItemViewType(position)) {
-                TYPE_EARTH -> {
-                    holder as EarthViewHolder
-                    holder.bind(data[position])
-                }
-                TYPE_MARS -> {
-                    holder as MarsViewHolder
+                TYPE_SIMPLE -> {
+                    holder as SimpleNoteViewHolder
                     holder.bind(data[position])
                 }
                 else -> {
-                    holder as HeaderViewHolder
+                    holder as ImagedNoteViewHolder
                     holder.bind(data[position])
                 }
             }
         }
 
-//        override fun onBindViewHolder(
-//            holder: MarsViewHolder,
-//            position: Int,
-//            payloads: MutableList<Any>
-//        ) {
-//            if (payloads.isEmpty()) super.onBindViewHolder(holder, position, payloads)
-//            else {
-//                if (payloads.any { it is Pair<*,*> })
-//                    holder.itemView
-//            }
-//        }
-
-
         override fun getItemViewType(position: Int): Int {
             return when {
-                position == 0 -> TYPE_HEADER
-                data[position].first.someDescription.isNullOrBlank() -> TYPE_MARS
+                data[position].first. == 0 -> TYPE_HEADER
+                data[position].first.noteDescription.isNullOrBlank() -> TYPE_MARS
                 else -> TYPE_EARTH
             }
         }
@@ -144,15 +123,15 @@ class RecyclerViewFragment : Fragment() {
             return Pair(Data("Mars", ""), false)
         }
 
-        inner class EarthViewHolder(private val earthBinding: RecyclerItemEarthBinding) :
-            BaseViewHolder(earthBinding.root) {
+        inner class SimpleNoteViewHolder(private val bindingSimple: RecyclerItemSimpleBinding) :
+            BaseViewHolder(bindingSimple.root) {
             override fun bind(data: Pair<Data, Boolean>) {
                 if (layoutPosition != RecyclerView.NO_POSITION) {
-                    earthBinding.earthImageView.setOnClickListener {
+                    bindingSimple.earthImageView.setOnClickListener {
                         onListItemClickListener.onItemClick(data.first)
-                        earthBinding.addItemImageView.setOnClickListener {
+                        bindingSimple.addItemImageView.setOnClickListener {
                             addItem()
-                            earthBinding.removeItemImageView.setOnClickListener {
+                            bindingSimple.removeItemImageView.setOnClickListener {
                                 removeItem()
                             }
                         }
@@ -172,26 +151,26 @@ class RecyclerViewFragment : Fragment() {
 
         }
 
-        inner class MarsViewHolder(private val marsBinding: RecyclerItemMarsBinding) :
-            BaseViewHolder(marsBinding.root), ItemTouchHelperViewHolder {
+        inner class ImagedNoteViewHolder(private val bindingImg: RecyclerItemImgBinding) :
+            BaseViewHolder(bindingImg.root), ItemTouchHelperViewHolder {
 
             override fun bind(data: Pair<Data, Boolean>) {
-                marsBinding.marsImageView.setOnClickListener {
+                bindingImg.marsImageView.setOnClickListener {
                     onListItemClickListener.onItemClick(data.first)
                 }
-                marsBinding.addItemImageView.setOnClickListener {
+                bindingImg.addItemImageView.setOnClickListener {
                     addItem()
-                    marsBinding.removeItemImageView.setOnClickListener {
+                    bindingImg.removeItemImageView.setOnClickListener {
                         removeItem()
                     }
                 }
-                marsBinding.moveItemDown.setOnClickListener { moveItemDown() }
-                marsBinding.moveItemUp.setOnClickListener { moveItemUp() }
-                marsBinding.marsDescriptionTextView.visibility =
+                bindingImg.moveItemDown.setOnClickListener { moveItemDown() }
+                bindingImg.moveItemUp.setOnClickListener { moveItemUp() }
+                bindingImg.descriptionTextView.visibility =
                     if (data.second) View.VISIBLE else View.GONE
-                marsBinding.title.setOnClickListener { toggleText() }
+                bindingImg.title.setOnClickListener { toggleText() }
 
-                marsBinding.dragHandleImageView.setOnTouchListener { v, event ->
+                bindingImg.dragHandleImageView.setOnTouchListener { v, event ->
                     if (MotionEventCompat.getActionMasked(event) == MotionEvent.ACTION_DOWN) {
                         dragListener.onStartDrag(this)
                     }
@@ -244,21 +223,10 @@ class RecyclerViewFragment : Fragment() {
             }
         }
 
-        inner class HeaderViewHolder(private val headerBinding: RecyclerViewHeaderBinding) :
-            BaseViewHolder(headerBinding.root) {
-            override fun bind(dataItem: Pair<Data, Boolean> ) {
-                itemView.setOnClickListener {
-                    onListItemClickListener.onItemClick(dataItem.first)
-//                    data[1] = Pair(Data("Jupiter", ""), false)
-//                    notifyItemChanged(1, Pair(Data("", ""), false))
-                }
-            }
-        }
 
         companion object {
-            private const val TYPE_EARTH = 0
-            private const val TYPE_MARS = 1
-            private const val TYPE_HEADER = 2
+            private const val TYPE_SIMPLE = 0
+            private const val TYPE_IMG = 1
         }
 
         interface OnListItemClickListener {

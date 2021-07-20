@@ -5,27 +5,24 @@
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/marsImageView"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/bg_mars" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Марс"
-        android:textSize="35sp"
+        android:layout_height="60dp"
+        android:layout_marginLeft="10dp"
+        android:text="Title"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/marsImageView"
-        app:layout_constraintStart_toEndOf="@+id/marsImageView"
-        app:layout_constraintTop_toTopOf="@+id/marsImageView" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="10dp" />
+
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/marsDescriptionTextView"
+        android:id="@+id/descriptionTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="10dp"
@@ -34,18 +31,18 @@
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/marsImageView"
+        app:layout_constraintTop_toBottomOf="@+id/title"
         tools:visibility="visible" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/moveItemUp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:layout_marginRight="60dp"
+        android:layout_marginRight="30dp"
         android:tint="@color/design_default_color_error"
-        app:layout_constraintEnd_toStartOf="@id/addItemImageView"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/moveItemDown"
+        app:layout_constraintTop_toTopOf="@id/title"
+        app:layout_constraintBottom_toBottomOf="@id/title"
         app:srcCompat="@android:drawable/arrow_up_float" />
 
     <androidx.appcompat.widget.AppCompatImageView
@@ -53,31 +50,31 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
-        android:layout_marginRight="60dp"
+        android:layout_marginRight="40dp"
         android:tint="@color/design_default_color_error"
-        app:layout_constraintTop_toBottomOf="@id/moveItemUp"
-        app:layout_constraintEnd_toStartOf="@id/removeItemImageView"
+        app:layout_constraintTop_toTopOf="@id/title"
+        app:layout_constraintEnd_toStartOf="@id/addItemImageView"
         app:srcCompat="@android:drawable/arrow_down_float" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/addItemImageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="60dp"
+        android:layout_marginRight="15dp"
         android:background="@color/colorAccent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/removeItemImageView"
+        app:layout_constraintTop_toTopOf="@id/title"
+        app:layout_constraintBottom_toBottomOf="@id/title"
         app:srcCompat="@drawable/ic_plus_fab" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/removeItemImageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="60dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/addItemImageView"
+        android:layout_marginRight="20dp"
+        app:layout_constraintEnd_toStartOf="@id/dragHandleImageView"
+        app:layout_constraintTop_toTopOf="@id/title"
+        app:layout_constraintBottom_toBottomOf="@id/title"
         app:srcCompat="@drawable/ic_archive" />
 
     <androidx.appcompat.widget.AppCompatImageView
@@ -86,16 +83,16 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="15dp"
         android:tint="@color/cardview_shadow_start_color"
-        app:layout_constraintBottom_toBottomOf="@+id/marsImageView"
+        app:layout_constraintBottom_toBottomOf="@+id/title"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/marsImageView"
+        app:layout_constraintTop_toTopOf="@+id/title"
         app:srcCompat="@drawable/ic_hamburger_menu_bottom_bar" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
         android:background="#000"
-        app:layout_constraintBottom_toBottomOf="@+id/marsDescriptionTextView"
+        app:layout_constraintBottom_toBottomOf="@+id/title"
         app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
 

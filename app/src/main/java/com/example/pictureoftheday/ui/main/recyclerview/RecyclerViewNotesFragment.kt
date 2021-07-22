@@ -46,7 +46,7 @@ class RecyclerViewNotesFragment : Fragment() {
 //            Data("Earth", "best"),
 //            Data("Mars", null)
         )
-        data.add(0, Pair(Data("Header"), false))
+//        data.add(0, Pair(Data("Header",), false))
 
         val adapter = RecyclerViewAdapter(
             object : RecyclerViewAdapter.OnListItemClickListener {
@@ -67,11 +67,11 @@ class RecyclerViewNotesFragment : Fragment() {
             builder.setTitle("Create a note")
                 .setMessage("Which note do you want to add?")
                 .setPositiveButton("Task") { dialog, which ->
-                    adapter.appendItem(Pair(Data("Task", "Description"), true))
+                    adapter.appendItem(Pair(Data("Task", "Description", true), false))
 
                 }
                 .setNegativeButton("Simple note") { dialog, which ->
-                    adapter.appendItem(Pair(Data("Simple note", "Description"), false))
+                    adapter.appendItem(Pair(Data("Simple note", "Description", false), false))
 
                 }
             builder.create().apply { show() }
@@ -87,7 +87,7 @@ class RecyclerViewNotesFragment : Fragment() {
     data class Data(
         val noteTitle: String = "Title",
         val noteDescription: String? = "Description",
-        val isImaged: Boolean = false
+        val isImaged: Boolean
     )
 
     class RecyclerViewAdapter(
@@ -137,16 +137,13 @@ class RecyclerViewNotesFragment : Fragment() {
         }
 
         private fun generateItem(): Pair<Data, Boolean> {
-            return Pair(Data("Mars", ""), false)
+            return Pair(Data("Mars", "", false), false)
         }
 
         inner class SimpleNoteViewHolder(private val bindingSimple: RecyclerItemSimpleBinding) :
             BaseViewHolder(bindingSimple.root), ItemTouchHelperViewHolder {
             override fun bind(data: Pair<Data, Boolean>) {
 
-                bindingSimple.expandDescriptionBtn.setOnClickListener {
-                    onListItemClickListener.onItemClick(data.first)
-                }
                 bindingSimple.addItemImageView.setOnClickListener {
                     addItem(layoutPosition)
                     bindingSimple.removeItemImageView.setOnClickListener {

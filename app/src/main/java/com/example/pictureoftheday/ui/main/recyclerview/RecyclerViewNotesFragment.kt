@@ -2,9 +2,11 @@ package com.example.pictureoftheday.ui.main.recyclerview
 
 import android.app.AlertDialog
 import android.content.DialogInterface
+import android.content.Intent
 import android.graphics.Canvas
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.*
 import android.widget.Toast
 import androidx.core.view.MotionEventCompat
@@ -13,6 +15,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pictureoftheday.R
 import com.example.pictureoftheday.databinding.*
+import kotlinx.android.parcel.Parcelize
 import kotlin.math.abs
 
 
@@ -34,19 +37,26 @@ class RecyclerViewNotesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
+
         val data = arrayListOf(
+            //2-ой аргумент Pair для состояния "свернут/развернут"
             Pair(Data("Mars", "", false), false),
             Pair(Data("Earth", "Desc", true), false)
-
-
-//            Data("Earth", "bist"),
-//            Data("Mars", ""),
-//            Data("Earth", "bast"),
-//            Data("Earth", "bust"),
-//            Data("Earth", "best"),
-//            Data("Mars", null)
         )
-//        data.add(0, Pair(Data("Header",), false))
+
+        if (savedInstanceState != null) {
+            val loadedData = savedInstanceState.getParcelableArray("saveData") as Array<Data>
+            data.clear()
+
+            for (i in 0..loadedData.size) {
+                loadedData[i]
+                data.add(Pair(loadedData[i],false))
+            }
+        }
+
+
+
+
 
         val adapter = RecyclerViewAdapter(
             object : RecyclerViewAdapter.OnListItemClickListener {
@@ -75,20 +85,29 @@ class RecyclerViewNotesFragment : Fragment() {
 
                 }
             builder.create().apply { show() }
-
-
-            //            adapter.appendItem()
         }
         itemTouchHelper = ItemTouchHelper(RecyclerViewAdapter.ItemTouchHelperCallback(adapter))
         itemTouchHelper.attachToRecyclerView(binding.lessonRecyclerView)
 
+
+//        val saveData: ArrayList<Data> = arrayListOf
+//
+//        println(saveData.size.toString() + "GEG")
+//
+//        for (i in 1 until data.size) {
+//            saveData[i - 1] = data[i - 1].first
+//        }
+//
+//        val savedDataArr = saveData.toArray()
+//        savedInstanceState?.putParcelableArray("saveData", savedDataArr)
     }
 
+    @Parcelize
     data class Data(
         val noteTitle: String = "Title",
         val noteDescription: String? = "Description",
         val isImaged: Boolean
-    )
+    ) : Parcelable
 
     class RecyclerViewAdapter(
         private var onListItemClickListener: OnListItemClickListener,
@@ -144,15 +163,9 @@ class RecyclerViewNotesFragment : Fragment() {
             BaseViewHolder(bindingSimple.root), ItemTouchHelperViewHolder {
             override fun bind(data: Pair<Data, Boolean>) {
 
-                bindingSimple.addItemImageView.setOnClickListener {
-                    addItem(layoutPosition)
-                    bindingSimple.removeItemImageView.setOnClickListener {
-                        removeItem(layoutPosition)
-                    }
-                }
                 bindingSimple.moveItemDown.setOnClickListener { moveItemDown(layoutPosition) }
                 bindingSimple.moveItemUp.setOnClickListener { moveItemUp(layoutPosition) }
-                bindingSimple.descriptionTextView.visibility =
+                bindingSimple.descriptionLayout.visibility =
                     if (data.second) View.VISIBLE else View.GONE
                 bindingSimple.expandDescriptionBtn.setOnClickListener { toggleText(layoutPosition) }
 
@@ -178,17 +191,11 @@ class RecyclerViewNotesFragment : Fragment() {
 
             override fun bind(data: Pair<Data, Boolean>) {
                     bindingImg.checkBox.setOnClickListener {
-                        onListItemClickListener.onItemClick(data.first)
-                    }
-                    bindingImg.addItemImageView.setOnClickListener {
-                        addItem(layoutPosition)
-                        bindingImg.removeItemImageView.setOnClickListener {
-                            removeItem(layoutPosition)
-                        }
+                        //какая-нибудь анимация "выполнено/не выполнено"
                     }
                     bindingImg.moveItemDown.setOnClickListener { moveItemDown(layoutPosition) }
                     bindingImg.moveItemUp.setOnClickListener { moveItemUp(layoutPosition) }
-                    bindingImg.descriptionTextView.visibility =
+                    bindingImg.descriptionLayout.visibility =
                         if (data.second) View.VISIBLE else View.GONE
                     bindingImg.expandDescriptionBtn.setOnClickListener { toggleText(layoutPosition) }
 
@@ -356,5 +363,11 @@ class RecyclerViewNotesFragment : Fragment() {
     override fun onContextItemSelected(item: MenuItem): Boolean {
         return super.onContextItemSelected(item)
     }
+
+//    override fun onSaveInstanceState(outState: Bundle) {
+//        super.onSaveInstanceState(outState)
+//        val intent = Intent()
+//        intent.putExtra("noteData", )
+//    }
 
 }

@@ -54,7 +54,6 @@ class RecyclerViewNotesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         if (arguments != null) {
             val restoreItemsCount = requireArguments().getInt(ITEMS_COUNT)
-            println(requireArguments().getParcelable<Data>("dataItem1")!!.toString() + " GEGW")
 
             for (i in 1..restoreItemsCount) {
                 val restoredItem = requireArguments().getParcelable<Data>("dataItem$i")!!

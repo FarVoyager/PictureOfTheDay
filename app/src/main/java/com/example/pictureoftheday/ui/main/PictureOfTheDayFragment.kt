@@ -171,7 +171,7 @@ class PictureOfTheDayFragment : Fragment() {
         when (item.itemId) {
             R.id.app_bar_fav ->
                 requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.container, RecyclerViewNotesFragment())
+                    .replace(R.id.container, RecyclerViewNotesFragment.newInstance())
                     .addToBackStack(null)
                     .commit()
             R.id.app_bar_settings -> {

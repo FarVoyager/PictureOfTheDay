@@ -18,6 +18,8 @@ import com.example.pictureoftheday.databinding.*
 import kotlinx.android.parcel.Parcelize
 import kotlin.math.abs
 
+private const val ITEMS_COUNT = "ITEMS_COUNT"
+
 
 class RecyclerViewNotesFragment : Fragment() {
 
@@ -35,28 +37,30 @@ class RecyclerViewNotesFragment : Fragment() {
         return binding.root
     }
 
+    private val data = arrayListOf(
+        //2-ой аргумент Pair для состояния "свернут/развернут"
+        Pair(Data("Mars", "", false), false),
+        Pair(Data("Earth", "Desc", true), false)
+    )
+
+    override fun onPause() {
+        super.onPause()
+        for (i in 0 until data.size) {
+            arguments?.putParcelable("dataItem$i", data[i].first)
+        }
+        arguments?.putInt(ITEMS_COUNT, data.size)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        if (arguments != null) {
+            val restoreItemsCount = requireArguments().getInt(ITEMS_COUNT)
+            println(requireArguments().getParcelable<Data>("dataItem1")!!.toString() + " GEGW")
 
-
-        val data = arrayListOf(
-            //2-ой аргумент Pair для состояния "свернут/развернут"
-            Pair(Data("Mars", "", false), false),
-            Pair(Data("Earth", "Desc", true), false)
-        )
-
-        if (savedInstanceState != null) {
-            val loadedData = savedInstanceState.getParcelableArray("saveData") as Array<Data>
-            data.clear()
-
-            for (i in 0..loadedData.size) {
-                loadedData[i]
-                data.add(Pair(loadedData[i],false))
+            for (i in 1..restoreItemsCount) {
+                val restoredItem = requireArguments().getParcelable<Data>("dataItem$i")!!
+                data.add(Pair(restoredItem, false))
             }
         }
-
-
-
-
 
         val adapter = RecyclerViewAdapter(
             object : RecyclerViewAdapter.OnListItemClickListener {
@@ -90,19 +94,10 @@ class RecyclerViewNotesFragment : Fragment() {
         itemTouchHelper.attachToRecyclerView(binding.lessonRecyclerView)
 
 
-//        val saveData: ArrayList<Data> = arrayListOf
-//
-//        println(saveData.size.toString() + "GEG")
-//
-//        for (i in 1 until data.size) {
-//            saveData[i - 1] = data[i - 1].first
-//        }
-//
-//        val savedDataArr = saveData.toArray()
-//        savedInstanceState?.putParcelableArray("saveData", savedDataArr)
+
     }
 
-    @Parcelize
+    @kotlinx.parcelize.Parcelize
     data class Data(
         val noteTitle: String = "Title",
         val noteDescription: String? = "Description",
@@ -153,10 +148,6 @@ class RecyclerViewNotesFragment : Fragment() {
         fun appendItem(dataPair: Pair<Data, Boolean>) {
             data.add(dataPair)
             notifyItemInserted(itemCount - 1)
-        }
-
-        private fun generateItem(): Pair<Data, Boolean> {
-            return Pair(Data("Mars", "", false), false)
         }
 
         inner class SimpleNoteViewHolder(private val bindingSimple: RecyclerItemSimpleBinding) :
@@ -230,15 +221,15 @@ class RecyclerViewNotesFragment : Fragment() {
             }
         }
 
-        private fun removeItem(layoutPosition: Int) {
-            data.removeAt(layoutPosition)
-            notifyItemRemoved(layoutPosition)
-        }
-
-        private fun addItem(layoutPosition: Int) {
-            data.add(layoutPosition, generateItem())
-            notifyItemInserted(layoutPosition)
-        }
+//        private fun removeItem(layoutPosition: Int) {
+//            data.removeAt(layoutPosition)
+//            notifyItemRemoved(layoutPosition)
+//        }
+//
+//        private fun addItem(layoutPosition: Int) {
+//            data.add(layoutPosition, generateItem())
+//            notifyItemInserted(layoutPosition)
+//        }
 
         private fun moveItemDown(layoutPosition: Int) {
             layoutPosition.takeIf { it < data.size - 1}?.also { currentPosition ->
@@ -249,10 +240,8 @@ class RecyclerViewNotesFragment : Fragment() {
             }
         }
 
-        companion object {
-            private const val TYPE_SIMPLE = 0
-            private const val TYPE_IMG = 1
-        }
+
+
 
         interface OnListItemClickListener {
             fun onItemClick(data: Data)
@@ -351,23 +340,16 @@ class RecyclerViewNotesFragment : Fragment() {
 
     }
 
-    override fun onCreateContextMenu(
-        menu: ContextMenu,
-        v: View,
-        menuInfo: ContextMenu.ContextMenuInfo?
-    ) {
-        super.onCreateContextMenu(menu, v, menuInfo)
-        requireActivity().menuInflater.apply { inflate(R.menu.add_note_menu, menu) }
+    companion object {
+        private const val TYPE_SIMPLE = 0
+        private const val TYPE_IMG = 1
+
+        @JvmStatic
+        fun newInstance(): RecyclerViewNotesFragment {
+            val fragment = RecyclerViewNotesFragment()
+            val arguments = Bundle()
+            fragment.arguments = arguments
+            return fragment
+        }
     }
-
-    override fun onContextItemSelected(item: MenuItem): Boolean {
-        return super.onContextItemSelected(item)
-    }
-
-//    override fun onSaveInstanceState(outState: Bundle) {
-//        super.onSaveInstanceState(outState)
-//        val intent = Intent()
-//        intent.putExtra("noteData", )
-//    }
-
 }

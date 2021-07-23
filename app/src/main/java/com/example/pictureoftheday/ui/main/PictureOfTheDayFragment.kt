@@ -64,7 +64,6 @@ class PictureOfTheDayFragment : Fragment(), OnTitleTextClick {
         binding.inputLayout.alpha = 0f //для анимации
 
         setWikiFieldIconClickAction()
-        setBottomSheetBehavior(view.findViewById(R.id.bottom_sheet_container))
         setBottomAppBar(view)
 
 
@@ -91,17 +90,7 @@ class PictureOfTheDayFragment : Fragment(), OnTitleTextClick {
                         showPhotoContent(url)
                     }
 
-                    //заполнение bottom sheet данными из API
-                    val bottomSheetTitleTextView: TextView? =
-                        view?.findViewById(R.id.bottom_sheet_description_header)
-                    bottomSheetTitleTextView?.text = serverResponseData.title
-
-                    val bottomSheetDescriptionTextView: TextView? =
-                        view?.findViewById(R.id.bottom_sheet_description)
-                    bottomSheetDescriptionTextView?.text = serverResponseData.explanation
-
                     binding.textViewPODDescription.text = serverResponseData.explanation
-
                     val spannable = SpannableString(serverResponseData.title)
                     spannable.setSpan(ForegroundColorSpan(Color.BLUE), 0, spannable.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
                     spannable.setSpan(UnderlineSpan(),0, spannable.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)

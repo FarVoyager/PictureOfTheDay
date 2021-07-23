@@ -152,7 +152,6 @@ class RecyclerViewNotesFragment : Fragment() {
         inner class SimpleNoteViewHolder(private val bindingSimple: RecyclerItemSimpleBinding) :
             BaseViewHolder(bindingSimple.root), ItemTouchHelperViewHolder {
             override fun bind(data: Pair<Data, Boolean>) {
-
                 bindingSimple.moveItemDown.setOnClickListener { moveItemDown(layoutPosition) }
                 bindingSimple.moveItemUp.setOnClickListener { moveItemUp(layoutPosition) }
                 bindingSimple.descriptionLayout.visibility =

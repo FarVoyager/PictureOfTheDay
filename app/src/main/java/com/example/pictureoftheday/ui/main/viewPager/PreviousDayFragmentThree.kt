@@ -1,8 +1,14 @@
 package com.example.pictureoftheday.ui.main.viewPager
 
+import android.content.Intent
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
 import android.text.method.ScrollingMovementMethod
+import android.text.style.ForegroundColorSpan
+import android.text.style.UnderlineSpan
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -21,7 +27,7 @@ import com.example.pictureoftheday.ui.main.viewmodel.PictureOfTheDayViewModel
 private const val MINUS_DAYS_THREE = 3
 
 
-class PreviousDayFragmentThree : Fragment() {
+class PreviousDayFragmentThree : Fragment(), OnTitleTextClick {
 
     private var _binding: FragmentPreviousDayFragmentThreeBinding? = null
     private val binding get() = _binding!!
@@ -78,8 +84,15 @@ class PreviousDayFragmentThree : Fragment() {
                         }
                     }
                     binding.yesterdayDate.text = viewModel.getPreviousDateForRequest(MINUS_DAYS_THREE)
-                    binding.yesterdayHeader.text = serverResponseData.title
                     binding.yesterdayDescription.text = serverResponseData.explanation
+
+                    val spannable = SpannableString(serverResponseData.title)
+                    spannable.setSpan(ForegroundColorSpan(Color.BLUE), 0, spannable.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    spannable.setSpan(UnderlineSpan(),0, spannable.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    binding.yesterdayHeader.text = spannable
+                    binding.yesterdayHeader.setOnClickListener {
+                        startWebSearchIntent(binding.yesterdayHeader.text.toString())
+                    }
                 }
             }
             is AppState.Loading -> {
@@ -91,5 +104,8 @@ class PreviousDayFragmentThree : Fragment() {
                 data.error.printStackTrace()
             }
         }
+    }
+    override fun startIntentActivity(intent: Intent) {
+        startActivity(intent)
     }
 }

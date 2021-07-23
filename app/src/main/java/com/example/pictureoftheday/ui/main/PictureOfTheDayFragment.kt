@@ -4,9 +4,14 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
+import android.text.style.UnderlineSpan
 import android.view.*
 import android.webkit.WebChromeClient
 import android.webkit.WebViewClient
@@ -23,13 +28,15 @@ import com.example.pictureoftheday.ui.main.animations.AnimationsFragmentBonus
 import com.example.pictureoftheday.ui.main.recyclerview.RecyclerViewNotesFragment
 import com.example.pictureoftheday.ui.main.utils.LayoutsFragment
 import com.example.pictureoftheday.ui.main.viewPager.MainViewPagerFragment
+import com.example.pictureoftheday.ui.main.viewPager.OnTitleTextClick
 import com.example.pictureoftheday.ui.main.viewmodel.AppState
 import com.example.pictureoftheday.ui.main.viewmodel.PictureOfTheDayViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import java.net.URLEncoder
 import java.util.*
 
-class PictureOfTheDayFragment : Fragment() {
+class PictureOfTheDayFragment : Fragment(), OnTitleTextClick {
 
     private var isWikiExpanded = false
 
@@ -59,6 +66,12 @@ class PictureOfTheDayFragment : Fragment() {
         setWikiFieldIconClickAction()
         setBottomSheetBehavior(view.findViewById(R.id.bottom_sheet_container))
         setBottomAppBar(view)
+
+
+    }
+
+    override fun startIntentActivity(intent: Intent) {
+        startActivity(intent)
     }
 
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
@@ -86,6 +99,16 @@ class PictureOfTheDayFragment : Fragment() {
                     val bottomSheetDescriptionTextView: TextView? =
                         view?.findViewById(R.id.bottom_sheet_description)
                     bottomSheetDescriptionTextView?.text = serverResponseData.explanation
+
+                    binding.textViewPODDescription.text = serverResponseData.explanation
+
+                    val spannable = SpannableString(serverResponseData.title)
+                    spannable.setSpan(ForegroundColorSpan(Color.BLUE), 0, spannable.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    spannable.setSpan(UnderlineSpan(),0, spannable.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    binding.textViewPODTitle.text = spannable
+                    binding.textViewPODTitle.setOnClickListener {
+                        startWebSearchIntent(binding.textViewPODTitle.text.toString())
+                    }
                 }
             }
             is AppState.Loading -> {
@@ -198,21 +221,24 @@ class PictureOfTheDayFragment : Fragment() {
     private fun setWikiFieldIconClickAction() {
         binding.wikiButton.setOnClickListener {
 
-            if (isWikiExpanded) {
-                val intent = Intent(Intent.ACTION_VIEW)
-                val wikiFieldText =
-                    Uri.parse("https://ru.wikipedia.org/wiki/${binding.inputEditText.text.toString()}")
-                intent.data = wikiFieldText
-                startActivity(intent)
-            } else {
+            if (isWikiExpanded) { startWikiIntent(binding.inputEditText.text.toString()) }
+            else {
                 ObjectAnimator.ofFloat(binding.inputLayout, "translationX", -1050f).start()
                 ObjectAnimator.ofFloat(binding.wikiButton, "elevation", 10f).start()
                 binding.inputLayout.animate()
                     .alpha(1f).duration = 400
                 isWikiExpanded = !isWikiExpanded
             }
-
         }
+    }
+
+
+
+    private fun startWikiIntent(request: String) {
+        val intent = Intent(Intent.ACTION_VIEW)
+            val wikiRequestString = Uri.parse("https://www.wikipedia.org/wiki/${request}")
+        intent.data = wikiRequestString
+        startActivity(intent)
     }
 
 }

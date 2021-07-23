@@ -1,7 +1,13 @@
 package com.example.pictureoftheday.ui.main.viewPager
 
+import android.content.Intent
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
+import android.text.style.UnderlineSpan
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -22,7 +28,7 @@ import com.example.pictureoftheday.ui.main.viewmodel.PictureOfTheDayViewModel
 private const val MINUS_DAYS_TWO = 2
 
 
-class PreviousDayFragmentTwo : Fragment() {
+class PreviousDayFragmentTwo : Fragment(), OnTitleTextClick {
 
     private var _binding: FragmentPreviousDayFragmentTwoBinding? = null
     private val binding get() = _binding!!
@@ -78,8 +84,15 @@ class PreviousDayFragmentTwo : Fragment() {
                         }
                     }
                     binding.yesterdayDate.text = viewModel.getPreviousDateForRequest(MINUS_DAYS_TWO)
-                    binding.yesterdayHeader.text = serverResponseData.title
                     binding.yesterdayDescription.text = serverResponseData.explanation
+
+                    val spannable = SpannableString(serverResponseData.title)
+                    spannable.setSpan(ForegroundColorSpan(Color.BLUE), 0, spannable.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    spannable.setSpan(UnderlineSpan(),0, spannable.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    binding.yesterdayHeader.text = spannable
+                    binding.yesterdayHeader.setOnClickListener {
+                        startWebSearchIntent(binding.yesterdayHeader.text.toString())
+                    }
                 }
             }
             is AppState.Loading -> {
@@ -92,5 +105,7 @@ class PreviousDayFragmentTwo : Fragment() {
             }
         }
     }
-
+    override fun startIntentActivity(intent: Intent) {
+        startActivity(intent)
+    }
 }

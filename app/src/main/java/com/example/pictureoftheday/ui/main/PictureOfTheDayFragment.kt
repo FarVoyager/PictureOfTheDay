@@ -179,8 +179,6 @@ class PictureOfTheDayFragment : Fragment(), OnTitleTextClick {
                             .commit()
                     }
                 })
-
-
         }
     }
 
@@ -232,13 +230,10 @@ class PictureOfTheDayFragment : Fragment(), OnTitleTextClick {
         }
     }
 
-
-
     private fun startWikiIntent(request: String) {
         val intent = Intent(Intent.ACTION_VIEW)
             val wikiRequestString = Uri.parse("https://www.wikipedia.org/wiki/${request}")
         intent.data = wikiRequestString
         startActivity(intent)
     }
-
 }

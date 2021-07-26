@@ -12,9 +12,8 @@ import com.example.pictureoftheday.R
 
 class SplashActivity : AppCompatActivity() {
 
-
-
     var handler = Handler()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
@@ -30,10 +29,6 @@ class SplashActivity : AppCompatActivity() {
                 override fun onAnimationCancel(animation: Animator?) {}
                 override fun onAnimationRepeat(animation: Animator?) {}
             })
-
-
-
-
 
         handler.postDelayed({
             startActivity(Intent(this@SplashActivity, MainActivity::class.java))

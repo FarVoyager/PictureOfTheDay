@@ -5,12 +5,14 @@
     android:layout_height="match_parent"
     android:nestedScrollingEnabled="true"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.main.viewPager.PreviousDayFragmentThree">
+    tools:context=".ui.main.viewPager.PreviousDayFragmentOne">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:layout_height="wrap_content"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toTopOf="@id/circle_indicator_protector"
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/sub_main_constraint"
@@ -21,55 +23,55 @@
                 android:id="@+id/yesterday_image_view"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/content_view_height"
-                app:layout_constraintTop_toTopOf="@id/sub_main_constraint"
+                app:layout_constraintBottom_toTopOf="@id/yesterday_date"
                 app:layout_constraintEnd_toEndOf="@id/sub_main_constraint"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/yesterday_date"/>
+                app:layout_constraintTop_toTopOf="@id/sub_main_constraint" />
 
             <WebView
                 android:id="@+id/yesterday_web_view"
                 android:layout_width="match_parent"
-                android:visibility="gone"
                 android:layout_height="@dimen/content_view_height"
-                app:layout_constraintTop_toTopOf="@id/sub_main_constraint"
+                android:visibility="gone"
+                app:layout_constraintBottom_toTopOf="@id/yesterday_date"
                 app:layout_constraintEnd_toEndOf="@id/sub_main_constraint"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/yesterday_date"/>
+                app:layout_constraintTop_toTopOf="@id/sub_main_constraint" />
 
             <TextView
                 android:id="@+id/yesterday_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:textSize="16sp"
                 android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_marginBottom="5dp"
-                android:layout_marginTop="5dp"
+                android:gravity="center_horizontal"
                 android:textAlignment="center"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@id/yesterday_header"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/yesterday_image_view"
-                app:layout_constraintBottom_toTopOf="@id/yesterday_header"
-                android:gravity="center_horizontal" />
+                app:layout_constraintTop_toBottomOf="@id/yesterday_image_view" />
 
             <TextView
                 android:id="@+id/yesterday_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:textSize="16sp"
                 android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_marginBottom="5dp"
-                android:layout_marginTop="5dp"
-
+                android:gravity="center_horizontal"
                 android:textAlignment="center"
+
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@id/yesterday_description"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/yesterday_date"
-                app:layout_constraintBottom_toTopOf="@id/yesterday_description"
-                android:gravity="center_horizontal" />
+                app:layout_constraintTop_toBottomOf="@id/yesterday_date" />
 
             <TextView
                 android:id="@+id/yesterday_description"
@@ -78,11 +80,11 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_marginBottom="20dp"
+                android:gravity="center_horizontal"
                 android:textAlignment="center"
-                app:layout_constraintEnd_toEndOf="@id/sub_main_constraint"
-                app:layout_constraintStart_toStartOf="@id/sub_main_constraint"
                 app:layout_constraintBottom_toBottomOf="@id/sub_main_constraint"
-                android:gravity="center_horizontal" />
+                app:layout_constraintEnd_toEndOf="@id/sub_main_constraint"
+                app:layout_constraintStart_toStartOf="@id/sub_main_constraint" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -92,7 +94,7 @@
     <View
         android:id="@+id/circle_indicator_protector"
         android:layout_width="match_parent"
-        android:layout_height="64dp"
+        android:layout_height="48dp"
         app:layout_constraintBottom_toBottomOf="parent"
         />
 

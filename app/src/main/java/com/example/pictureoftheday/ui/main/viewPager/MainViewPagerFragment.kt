@@ -38,7 +38,6 @@ class MainViewPagerFragment : Fragment() {
             getTabAt(0)?.text = getCurrentStringDate(3)
             getTabAt(1)?.text = getCurrentStringDate(2)
             getTabAt(2)?.text = getCurrentStringDate(1)
-            getTabAt(2)?.orCreateBadge?.number = 3
 
             addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
                 override fun onTabSelected(tab: TabLayout.Tab?) {

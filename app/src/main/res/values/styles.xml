@@ -1,0 +1,76 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">#2196F3</item> <!-- цвет button, выбранных элементов -->
+        <item name="colorPrimaryDark">#03A9F4</item>
+        <item name="android:textColorPrimary">@color/primaryTextColor</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryDark</item> <!-- ??? -->
+        <item name="colorOnPrimary">#FFFFFF</item> <!-- ??? -->
+        <item name="colorSecondary">#13ADF3</item> <!--цвет fab, progressBar, выбранных checkBox, Switch и radioButton-->
+        <item name="colorSecondaryVariant">#F44336</item> <!-- ??? -->
+        <item name="colorOnSecondary">#FFFFFF</item> <!-- ??? -->
+        <item name="colorError">#F44336</item>
+        <item name="colorOnError">#FFFFFF</item>
+        <item name="colorSurface">#2196F3</item>  <!--цвет фонов switch, chip, tab, bottomSheet-->
+        <item name="colorOnSurface">#212121 </item> <!--цвет рамок textInputLayout, невыбранных элементов-->
+        <item name="android:colorBackground">@color/colorBackground</item> <!--цвет заднего фона-->
+        <item name="colorOnBackground">#212121</item> <!-- ??? -->
+        <item name="materialButtonStyle">@style/raisedButtonStyle</item>
+        <item name="tabSelectedTextColor">@color/white</item> <!-- ??? -->
+        <item name="tabIndicatorColor">@color/white</item> <!-- ??? -->
+        <item name="tabRippleColor">@color/white</item> <!-- ??? -->
+        <item name="bottomSheetBackground">@color/bottomSheetBackground</item> <!-- ??? -->
+        <item name="textColorThemed">@color/textColor</item> <!-- ??? -->
+        <item name="menuItemColorThemed">@color/white</item> <!-- ??? -->
+
+
+    </style>
+
+    <style name="raisedButtonStyle" parent="Widget.MaterialComponents.Button">
+        <item name="backgroundTint">#FF0000</item>
+    </style>
+
+    <style name="AppThemeDark" parent="AppTheme">
+        <item name="colorPrimary">@color/color_gray</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColor">#ACACAC</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">#6A6A6A</item> <!--цвет fab, progressBar, выбранных checkBox, Switch и radioButton-->
+        <item name="colorPrimaryDark">#353535</item>
+        <item name="colorAccent">@color/white</item>
+        <item name="android:colorBackground">@color/colorBackgroundDark</item>
+        <item name="colorSurface">#353535</item>
+        <item name="colorOnSurface">#E1E1E1</item>
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="bottomSheetBackground">@color/bottomSheetBackgroundDark</item> <!-- ??? -->
+        <item name="textColorThemed">@color/textColorDark</item> <!-- ??? -->
+        <item name="menuItemColorThemed">@color/white</item> <!-- ??? -->
+        <item name="android:windowBackground">@color/colorBackgroundDark</item> <!-- ??? -->
+
+
+
+    </style>
+
+    <style name="Xeno.Button" parent="TextAppearance.MaterialComponents.Button">
+        <item name="fontFamily">@font/roboto_mono</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:fontFamily">@font/roboto_mono</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="Xeno.Button_2" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="fontFamily">@font/roboto_mono</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:fontFamily">@font/roboto_mono</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="AppTheme.Splash">
+        <item name="android:windowBackground">@drawable/splash_background</item>
+
+    </style>
+
+
+</resources>

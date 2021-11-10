@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="themeColorPrimary" format="reference"/>
+    <attr name="bottomSheetBackground" format="reference"/>
+    <attr name="textColorThemed" format="reference"/>
+    <attr name="menuItemColorThemed" format="reference"/>
+
+
+</resources>

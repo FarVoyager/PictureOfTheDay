@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="none">
+        <item
+            android:id="@+id/navigation_set_light"
+            android:icon="@drawable/ic_archive"
+            android:title="@string/toScreen_1" />
+        <item
+            android:id="@+id/navigation_set_dark"
+            android:icon="@android:drawable/ic_menu_send"
+            android:title="@string/toScreen_2" />
+    </group>
+</menu>
+

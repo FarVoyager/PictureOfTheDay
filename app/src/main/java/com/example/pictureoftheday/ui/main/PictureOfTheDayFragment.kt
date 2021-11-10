@@ -3,6 +3,7 @@ package com.example.pictureoftheday.ui.main
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
+import android.app.Fragment
 import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
@@ -15,11 +16,10 @@ import android.text.style.UnderlineSpan
 import android.view.*
 import android.webkit.WebChromeClient
 import android.webkit.WebViewClient
-import androidx.fragment.app.Fragment
-import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.ViewModelProvider
 import coil.api.load
 import com.example.pictureoftheday.R
@@ -36,7 +36,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.net.URLEncoder
 import java.util.*
 
-class PictureOfTheDayFragment : Fragment(), OnTitleTextClick {
+class PictureOfTheDayFragment : androidx.fragment.app.Fragment(), OnTitleTextClick {
 
     private var isWikiExpanded = false
 
